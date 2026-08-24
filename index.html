@@ -3,141 +3,516 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ultimate Question</title>
+    <title>ANZ Corporate Intranet - Flat Earth Society Compliance Portal</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        anz: {
+                            navy: '#004165',
+                            dark: '#002845',
+                            blue: '#007DBA',
+                            light: '#E6F2F8',
+                            accent: '#00B2E3'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <style>
         body {
-            /* Create enough height to allow for significant scrolling */
-            height: 500vh;
-            margin: 0;
-            overflow-x: hidden;
-            transition: background-color 0.1s linear;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f0f4f8;
+            color: #0f172a;
         }
-
-        #main-container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            width: 100%;
-            z-index: 10;
+        .serif-font {
+            font-family: 'Playfair Display', Georgia, serif;
         }
-
-        .party-emoji {
-            position: absolute;
-            font-size: 2rem;
-            pointer-events: none;
-            animation: fall 3s linear forwards;
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-6px, 0); }
+            20%, 40%, 60%, 80% { transform: translate(6px, 0); }
         }
-
-        @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out both;
         }
-
-        #happy-message {
-            transition: all 0.5s ease-out;
-            transform: scale(0);
-            opacity: 0;
+        @keyframes alert-glow {
+            0%, 100% { border-color: #dc2626; box-shadow: 0 0 15px rgba(220, 38, 38, 0.4); }
+            50% { border-color: #ef4444; box-shadow: 0 0 25px rgba(239, 68, 68, 0.7); }
         }
-
-        #happy-message.show {
-            transform: scale(1.2);
-            opacity: 1;
-        }
-
-        .btn-transition {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .corporate-alert {
+            animation: alert-glow 1s infinite;
         }
     </style>
 </head>
-<body class="bg-white">
+<body class="min-h-screen flex flex-col justify-between bg-slate-100 text-slate-800 selection:bg-anz-blue selection:text-white">
 
-    <div id="main-container" class="px-4">
-        <h1 id="question-text" class="text-5xl md:text-7xl font-black mb-12 drop-shadow-lg select-none">
-            Do you like boys?
-        </h1>
-
-        <div class="flex flex-wrap justify-center gap-6">
-            <button id="yes-btn" class="btn-transition bg-white text-black px-12 py-4 rounded-full text-2xl font-bold shadow-2xl hover:scale-110 active:scale-95">
-                Yes
-            </button>
-            
-            <button id="no-btn" class="btn-transition bg-white text-black px-12 py-4 rounded-full text-2xl font-bold shadow-2xl hover:scale-110 active:scale-95">
-                No
-            </button>
+    <!-- ANZ Intranet Corporate Header -->
+    <header class="w-full bg-anz-navy text-white shadow-md border-b-4 border-anz-accent">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <!-- ANZ Style Logo Emblem -->
+                <div class="bg-white text-anz-navy font-black tracking-tighter px-2.5 py-1 rounded text-xl md:text-2xl flex items-center gap-1 shadow-inner">
+                    <span>ANZ</span>
+                    <span class="text-anz-blue text-xs font-semibold uppercase tracking-widest pl-1 border-l border-slate-300">Internal</span>
+                </div>
+                <div class="hidden sm:block text-xs border-l border-slate-600 pl-3 text-slate-300">
+                    <p class="font-bold uppercase tracking-wider text-white">Global Employee Services</p>
+                    <p class="text-[10px] text-slate-400">Intranet Governance & Disc Compliance Division</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-anz-blue text-white shadow-sm">
+                    🔒 HR Verified Portal
+                </span>
+            </div>
         </div>
+    </header>
 
-        <div id="happy-message" class="mt-12 text-4xl md:text-6xl font-black text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
-            SO HAPPY FOR YOU! 🏳️‍🌈
+    <!-- Sub-header Banner -->
+    <div class="bg-anz-dark text-slate-300 text-xs py-2 px-4 border-b border-slate-700">
+        <div class="max-w-5xl mx-auto flex flex-wrap justify-between items-center gap-2">
+            <div>
+                <span class="text-anz-accent font-bold">ANNOUNCEMENT:</span> mandatory screening for all ANZ Flat Earth Society Committee applicants.
+            </div>
+            <div class="text-[11px] text-slate-400 font-mono">
+                System Status: <span class="text-emerald-400 font-bold">100% LEVEL</span>
+            </div>
         </div>
     </div>
 
-    <!-- Scroll Indicator -->
-    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 text-white/50 animate-bounce uppercase tracking-widest text-sm font-bold">
+    <!-- Main Container -->
+    <main class="w-full max-w-3xl mx-auto p-4 md:p-6 my-auto">
         
-    </div>
+        <div class="bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden relative">
+            
+            <!-- START SCREEN -->
+            <div id="start-screen" class="p-6 md:p-10 space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="text-xs font-bold text-anz-blue tracking-widest uppercase mb-1">Internal Committee Application</div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-anz-navy tracking-tight">
+                        ANZ Flat Earth Society — Membership Entrance Exam
+                    </h1>
+                    <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                        Welcome, colleague. Prior to granting access to the official <strong>ANZ Flat Earth Society Intranet Community & Committee Channel</strong>, all employees must pass this 10-question Disc Purity Assessment.
+                    </p>
+                </div>
 
+                <div class="bg-anz-light border-l-4 border-anz-blue p-4 rounded-r-lg text-xs md:text-sm text-anz-navy space-y-2">
+                    <div class="font-bold flex items-center gap-1.5 text-anz-navy">
+                        <span>📋</span> <span>Assessment Terms & Conditions:</span>
+                    </div>
+                    <ul class="list-disc list-inside space-y-1 text-slate-700">
+                        <li>This exam consists of 10 mandatory single-choice questions.</li>
+                        <li><strong>Zero Tolerance Policy:</strong> Selecting any Round-Earth or NASA-aligned response results in <span class="text-red-600 font-bold">immediate disqualification</span>.</li>
+                        <li>Passing candidates will receive an official digital ANZ FES Certificate suitable for desk display.</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <button onclick="quiz.start()" class="w-full py-4 bg-anz-navy hover:bg-anz-dark text-white font-bold text-base rounded-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group border-b-4 border-anz-dark">
+                        <span>START MEMBERSHIP EXAMINATION</span>
+                        <span class="group-hover:translate-x-1 transition-transform">➔</span>
+                    </button>
+                    <p class="text-center text-[11px] text-slate-400">
+                        By clicking above, you confirm you do not believe water can stick to a spinning ball.
+                    </p>
+                </div>
+            </div>
+
+            <!-- QUIZ SCREEN -->
+            <div id="quiz-screen" class="hidden p-6 md:p-8 space-y-6">
+                <!-- Progress Header -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <div class="flex justify-between items-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                        <span id="question-number" class="text-anz-navy font-bold">Question 1 of 10</span>
+                        <span id="disc-level" class="bg-sky-100 text-anz-navy px-2.5 py-1 rounded-full text-[11px]">Clearance: Junior Flat Officer</span>
+                    </div>
+                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden border border-slate-200">
+                        <div id="progress-bar" class="bg-anz-blue h-full transition-all duration-300" style="width: 10%"></div>
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="space-y-3">
+                    <div class="inline-block px-2.5 py-1 bg-slate-100 text-slate-600 font-mono text-[11px] font-bold uppercase rounded border border-slate-200">
+                        Topic: <span id="question-tag" class="text-anz-navy">Basic Geometry</span>
+                    </div>
+                    <h2 id="question-text" class="text-lg md:text-xl font-bold text-anz-navy leading-snug">
+                        Question text goes here?
+                    </h2>
+                </div>
+
+                <!-- Options -->
+                <div id="options-container" class="space-y-3 pt-2">
+                    <!-- Dynamic Buttons -->
+                </div>
+            </div>
+
+            <!-- DISQUALIFIED SCREEN -->
+            <div id="disqualified-screen" class="hidden p-6 md:p-8 space-y-6 corporate-alert bg-red-50/50">
+                <div class="text-center space-y-3 border-b border-red-200 pb-5">
+                    <div class="inline-flex p-3 rounded-full bg-red-100 text-red-600 text-3xl">
+                        🛑
+                    </div>
+                    <h2 class="text-2xl font-black text-red-700 tracking-tight uppercase">
+                        APPLICATION REJECTED
+                    </h2>
+                    <p class="text-xs font-mono text-red-600 font-bold">
+                        REASON: GLOBE-HEAD / SPHERICAL PROPAGANDA DETECTED
+                    </p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg border border-red-200 text-xs text-slate-700 space-y-2 shadow-sm">
+                    <p id="fail-reason" class="font-bold text-slate-900 text-sm">
+                        You answered like someone who believes gravity pulls water onto the bottom of a spinning globe!
+                    </p>
+                    <div class="pt-2 border-t border-slate-100 text-slate-500 space-y-1">
+                        <p>• Your intranet IP address has been flagged for curvature bias.</p>
+                        <p>• Please complete mandatory retraining on "The Horizon is Always Flat".</p>
+                        <p>• ANZ Flat Earth Society intranet community access is currently <strong class="text-red-600">DENIED</strong>.</p>
+                    </div>
+                </div>
+
+                <button onclick="quiz.reset()" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold text-sm rounded-lg transition shadow-md uppercase tracking-wider">
+                    🔄 Acknowledge & Retry Examination
+                </button>
+            </div>
+
+            <!-- VICTORY SCREEN -->
+            <div id="victory-screen" class="hidden p-6 md:p-8 space-y-6">
+                <div class="text-center space-y-2">
+                    <span class="text-4xl">🎉</span>
+                    <h2 class="text-2xl font-black text-anz-navy uppercase tracking-tight">
+                        EXAMINATION PASSED!
+                    </h2>
+                    <p class="text-sm text-slate-600">
+                        You have demonstrated 100% Disc Compliance. Welcome to the ANZ Flat Earth Society!
+                    </p>
+                </div>
+
+                <!-- ANZ Corporate Certificate -->
+                <div id="certificate" class="bg-slate-50 p-6 rounded-xl border-4 border-anz-navy shadow-lg relative overflow-hidden space-y-4">
+                    <div class="absolute -right-8 -bottom-8 text-slate-200/40 text-9xl font-black pointer-events-none select-none">
+                        ANZ
+                    </div>
+
+                    <div class="border border-slate-300 p-5 rounded-lg bg-white space-y-4 relative z-10">
+                        <div class="flex justify-between items-center border-b-2 border-anz-navy pb-3">
+                            <div>
+                                <h3 class="font-black text-xl text-anz-navy tracking-tight">ANZ FLAT EARTH SOCIETY</h3>
+                                <p class="text-[10px] text-anz-blue font-bold uppercase tracking-widest">Official Internal Certificate of Membership</p>
+                            </div>
+                            <div class="bg-anz-navy text-white text-xs font-black px-2.5 py-1 rounded">
+                                APPROVED
+                            </div>
+                        </div>
+
+                        <div class="text-center py-2 space-y-1">
+                            <p class="text-xs uppercase text-slate-500 font-semibold tracking-wider">This officially confirms that</p>
+                            <input type="text" id="member-name" placeholder="CLICK HERE TO ENTER YOUR NAME" value="Valued ANZ Employee" class="text-center font-black text-lg md:text-xl text-anz-navy bg-amber-50/50 border-b-2 border-anz-blue focus:outline-none w-full px-2 py-1 serif-font">
+                            <p class="text-xs text-slate-600 italic pt-1">
+                                has passed all 10 Level Purity Modules and is officially cleared to join the ANZ Flat Earth Committee Intranet Channel.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 text-[10px] font-mono bg-slate-50 p-2.5 rounded border border-slate-200 text-slate-700">
+                            <div><strong>EMPLOYEE ID:</strong> <span class="text-anz-blue">ANZ-DISC-9021</span></div>
+                            <div><strong>CLEARANCE:</strong> LEVEL 1 FLAT OFFICER</div>
+                            <div><strong>GRAVITY STATUS:</strong> REJECTED</div>
+                            <div><strong>ICE WALL PASS:</strong> GRANTED</div>
+                        </div>
+
+                        <div class="flex justify-between items-end pt-2 text-xs">
+                            <div>
+                                <div class="font-bold text-anz-navy">Global Head of Flat Banking</div>
+                                <div class="text-[9px] text-slate-500 uppercase">ANZ Flat Earth Intranet Committee</div>
+                            </div>
+                            <div class="w-14 h-14 border-2 border-anz-blue rounded-full flex flex-col items-center justify-center text-anz-blue font-bold text-[8px] text-center rotate-12 bg-sky-50">
+                                <span>OFFICIAL</span>
+                                <span class="font-black text-xs">ANZ</span>
+                                <span>VERIFIED</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                    <button onclick="window.print()" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded-lg transition border border-slate-700 flex items-center justify-center gap-2">
+                        <span>🖨️ Print Certificate for Desk</span>
+                    </button>
+                    <button onclick="quiz.reset()" class="flex-1 py-3 bg-anz-navy hover:bg-anz-dark text-white font-bold text-sm rounded-lg transition flex items-center justify-center gap-2">
+                        <span>🔄 Retake Exam</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-white border-t border-slate-200 py-4 px-4 text-center text-xs text-slate-500 space-y-1">
+        <p class="font-semibold text-slate-600">ANZ Flat Earth Society — Internal Satirical Intranet Portal</p>
+        <p class="text-[10px] text-slate-400">Disclaimer: For employee entertainment purposes only. No actual banking curvature was altered during this exam.</p>
+    </footer>
+
+    <!-- Audio Synthesizer & Logic -->
     <script>
-        const body = document.body;
-        const questionText = document.getElementById('question-text');
-        const yesBtn = document.getElementById('yes-btn');
-        const noBtn = document.getElementById('no-btn');
-        const happyMessage = document.getElementById('happy-message');
-
-        // Rainbow Scroll Logic
-        window.addEventListener('scroll', () => {
-            const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-            const hue = Math.floor(scrollPercent * 360);
-            
-            // Background changes through the rainbow
-            body.style.backgroundColor = `hsl(${hue}, 70%, 60%)`;
-            
-            // Text changes color (offsetting the hue for contrast)
-            questionText.style.color = `hsl(${(hue + 180) % 360}, 100%, 30%)`;
-        });
-
-        function launchParty() {
-            const emojis = ['🎉', '🥳', '🌈', '✨', '💖', '🎊', '🕺'];
-            for (let i = 0; i < 100; i++) {
-                setTimeout(() => {
-                    const emoji = document.createElement('div');
-                    emoji.className = 'party-emoji';
-                    emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                    emoji.style.left = Math.random() * 100 + 'vw';
-                    emoji.style.fontSize = (Math.random() * 2 + 1) + 'rem';
-                    document.body.appendChild(emoji);
-                    
-                    // Clean up
-                    setTimeout(() => emoji.remove(), 3000);
-                }, i * 20);
+        // Web Audio API Synthesizer
+        class SoundFX {
+            constructor() { this.ctx = null; }
+            init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+            playCorrect() {
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1);
+                osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.2);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.start(now); osc.stop(now + 0.3);
+            }
+            playWrong() {
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(160, now);
+                osc.frequency.linearRampToValueAtTime(70, now + 0.35);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.start(now); osc.stop(now + 0.35);
+            }
+            playVictory() {
+                this.init();
+                const now = this.ctx.currentTime;
+                const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
+                notes.forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    gain.gain.setValueAtTime(0.15, now + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.2);
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.start(now + idx * 0.08); osc.stop(now + idx * 0.08 + 0.2);
+                });
             }
         }
 
-        yesBtn.addEventListener('click', () => {
-            launchParty();
-        });
+        const sfx = new SoundFX();
 
-        noBtn.addEventListener('click', function() {
-            // Transform the No button into a Yes button
-            this.innerText = 'Yes';
-            this.classList.remove('bg-white');
-            this.classList.add('bg-green-400', 'text-white');
-            
-            // Change functionality to match 'Yes'
-            this.onclick = launchParty;
+        // ANZ Custom Question Set
+        const questions = [
+            {
+                topic: "Basic Banking & Geometry",
+                question: "What is the official shape of the planet Earth, according to flat-earther bank logic?",
+                options: [
+                    { text: "A stable, flat, level disc where account balances never tip over.", correct: true },
+                    { text: "A spinning, wet spherical marble hurtling through space at 67,000 mph.", correct: false, failReason: "A spinning globe would cause all digital currency to slip off the edge of the server!" }
+                ]
+            },
+            {
+                topic: "Corporate Physics",
+                question: "How do we explain objects staying on the floor in ANZ branch offices?",
+                options: [
+                    { text: "Gravitational pull towards the mass center of a curved Earth.", correct: false, failReason: "Gravity is an unsubstantiated rumor. Please read your Employee Flat Handbook!" },
+                    { text: "Universal Acceleration — the flat disc earth accelerates upwards at 9.8m/s².", correct: true }
+                ]
+            },
+            {
+                topic: "Branch Architecture",
+                question: "Why are spirit levels used when building ANZ branches?",
+                options: [
+                    { text: "Because the bubble stays flat, proving the ground beneath is 100% horizontal disc.", correct: true },
+                    { text: "To compensate for the spherical curvature of the local Australian terrain.", correct: false, failReason: "If terrain was curved, our ATM machines would slide down the street!" }
+                ]
+            },
+            {
+                topic: "Trans-Tasman Operations",
+                question: "When flying between Australia and New Zealand, why do direct flight paths appear straight on our maps?",
+                options: [
+                    { text: "Because Great Circle spherical routes are shortest on a globe.", correct: false, failReason: "Incorrect! Pilot navigation systems are secretly set to 'Disc Mode'." },
+                    { text: "Because the Tasman Sea is completely flat and flat maps tell the true story.", correct: true }
+                ]
+            },
+            {
+                topic: "Solar Financial Accounting",
+                question: "What is the Sun, strictly speaking?",
+                options: [
+                    { text: "A local, 32-mile spotlight circling directly above the flat disc at close altitude.", correct: true },
+                    { text: "A giant nuclear fusion star located 150 million kilometers away.", correct: false, failReason: "150 million kilometers? Audit team checked: that distance is unverified expense!" }
+                ]
+            },
+            {
+                topic: "Antarctic Border Policy",
+                question: "What actually exists at the far southern perimeter of the map?",
+                options: [
+                    { text: "A giant 150-foot Ice Wall guarding the edge of the water, patrolled by penguins.", correct: true },
+                    { text: "A snowy continent located at the bottom pole of a sphere.", correct: false, failReason: "Security alert! The Ice Wall holds the oceans in; do not question the guardians!" }
+                ]
+            },
+            {
+                topic: "Executive Authority",
+                question: "Who holds the most authority regarding Earth shape calculations?",
+                options: [
+                    { text: "Isaac Newton, Carl Sagan, and NASA space engineers.", correct: false, failReason: "Isaac Newton made up gravity after being hit on the head by fruit!" },
+                    { text: "Dave from ANZ Facilities, who measured the office hallway with a 30m tape measure.", correct: true }
+                ]
+            },
+            {
+                topic: "Space Agency Audit",
+                question: "What is NASA's main business function?",
+                options: [
+                    { text: "High-end CGI Hollywood graphics production and maintaining green-screen sets.", correct: true },
+                    { text: "Scientific exploration of outer space and satellite launching.", correct: false, failReason: "Space rockets curve sideways because they hit the dome and bounce off!" }
+                ]
+            },
+            {
+                topic: "Lunar Auditing",
+                question: "What causes a lunar eclipse during an ANZ financial quarter?",
+                options: [
+                    { text: "An invisible 'Shadow Object' passing in front of the self-luminous moon.", correct: true },
+                    { text: "The spherical Earth passing between the Sun and Moon.", correct: false, failReason: "How could a round sphere cast a flat shadow? Audit rejected!" }
+                ]
+            },
+            {
+                topic: "Ancient Economics",
+                question: "Eratosthenes measured shadows in 240 BC to estimate Earth's size. What went wrong?",
+                options: [
+                    { text: "He proved Earth was round using geometry.", correct: false, failReason: "He forgot to account for dome light refraction! Total beginner mistake." },
+                    { text: "He simply proved the Sun is close and small! Total rookie error.", correct: true }
+                ]
+            }
+        ];
 
-            // Show the "So happy for you" message
-            happyMessage.classList.add('show');
-            
-            // Trigger the initial party
-            launchParty();
-        });
+        // Quiz Controller
+        class Quiz {
+            constructor() {
+                this.currentIndex = 0;
+                this.startScreen = document.getElementById('start-screen');
+                this.quizScreen = document.getElementById('quiz-screen');
+                this.disqualifiedScreen = document.getElementById('disqualified-screen');
+                this.victoryScreen = document.getElementById('victory-screen');
+                
+                this.questionNumber = document.getElementById('question-number');
+                this.discLevel = document.getElementById('disc-level');
+                this.progressBar = document.getElementById('progress-bar');
+                this.questionTag = document.getElementById('question-tag');
+                this.questionText = document.getElementById('question-text');
+                this.optionsContainer = document.getElementById('options-container');
+                this.failReason = document.getElementById('fail-reason');
+            }
 
-        // Initialize background color
-        body.style.backgroundColor = `hsl(0, 70%, 60%)`;
-        questionText.style.color = `hsl(180, 100%, 30%)`;
+            start() {
+                this.currentIndex = 0;
+                this.startScreen.classList.add('hidden');
+                this.disqualifiedScreen.classList.add('hidden');
+                this.victoryScreen.classList.add('hidden');
+                this.quizScreen.classList.remove('hidden');
+                this.loadQuestion();
+            }
+
+            loadQuestion() {
+                const q = questions[this.currentIndex];
+                
+                // Progress
+                this.questionNumber.innerText = `Question ${this.currentIndex + 1} of ${questions.length}`;
+                const progressPercent = ((this.currentIndex + 1) / questions.length) * 100;
+                this.progressBar.style.width = `${progressPercent}%`;
+
+                // Clearance levels
+                const clearances = [
+                    "Junior Flat Trainee", "Branch Level Officer", "Tasman Disc Auditor", 
+                    "Dome Compliance Specialist", "Ice Wall Inspector", "Senior Disc Executive"
+                ];
+                const cIdx = Math.floor((this.currentIndex / questions.length) * clearances.length);
+                this.discLevel.innerText = `Clearance: ${clearances[cIdx]}`;
+
+                // Content
+                this.questionTag.innerText = q.topic;
+                this.questionText.innerText = q.question;
+
+                // Shuffle options
+                const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+                this.optionsContainer.innerHTML = '';
+                shuffledOptions.forEach((opt) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-4 rounded-lg bg-slate-50 hover:bg-anz-light border-2 border-slate-200 hover:border-anz-blue transition-all font-medium text-sm md:text-base text-slate-800 flex items-start gap-3 group shadow-sm";
+                    btn.innerHTML = `
+                        <span class="w-6 h-6 rounded-full bg-slate-200 group-hover:bg-anz-blue group-hover:text-white flex items-center justify-center text-xs font-bold shrink-0 transition-colors mt-0.5 text-slate-600">
+                            ✓
+                        </span>
+                        <span>${opt.text}</span>
+                    `;
+                    btn.onclick = () => this.handleAnswer(opt);
+                    this.optionsContainer.appendChild(btn);
+                });
+            }
+
+            handleAnswer(option) {
+                if (option.correct) {
+                    sfx.playCorrect();
+                    this.currentIndex++;
+                    if (this.currentIndex < questions.length) {
+                        this.loadQuestion();
+                    } else {
+                        this.showVictory();
+                    }
+                } else {
+                    sfx.playWrong();
+                    this.showDisqualified(option.failReason);
+                }
+            }
+
+            showDisqualified(reason) {
+                this.quizScreen.classList.add('hidden');
+                this.failReason.innerText = reason || "You answered like someone who believes water curves around a spinning ball.";
+                this.disqualifiedScreen.classList.remove('hidden');
+                
+                document.body.classList.add('animate-shake');
+                setTimeout(() => document.body.classList.remove('animate-shake'), 400);
+            }
+
+            showVictory() {
+                sfx.playVictory();
+                this.quizScreen.classList.add('hidden');
+                this.victoryScreen.classList.remove('hidden');
+                
+                if (typeof confetti === 'function') {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+            }
+
+            reset() {
+                this.start();
+            }
+        }
+
+        const quiz = new Quiz();
     </script>
 </body>
 </html>
