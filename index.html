@@ -118,12 +118,8 @@
     <main class="max-w-6xl mx-auto px-6 pt-16 sm:pt-24 relative z-10">
         
         <!-- Header Section -->
-        <header class="mb-16 text-center sm:text-left flex flex-col sm:flex-row sm:items-end justify-between gap-6 animate-slide-up">
+        <header class="mb-16 text-left animate-slide-up">
             <div class="space-y-4 max-w-2xl">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-borderSubtle text-xs font-mono text-gray-400 uppercase tracking-widest shadow-sm">
-                    <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
-                    20 Minute Delayed Data
-                </div>
                 <h1 class="text-4xl sm:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
                     Portfolio
                 </h1>
@@ -133,15 +129,6 @@
                     <span class="inline-block w-48 h-4 bg-surface rounded animate-pulse"></span>
                     <span class="inline-block w-32 h-4 bg-surface rounded animate-pulse"></span>
                 </p>
-            </div>
-            
-            <!-- F2 Last Updated Target -->
-            <div class="text-sm font-mono text-gray-500 text-center sm:text-right bg-surface px-4 py-2 rounded-lg border border-borderSubtle shadow-sm">
-                Last Updated<br>
-                <span id="last-updated" class="text-white font-medium">
-                    <!-- Loaded via JS -->
-                    <span class="inline-block w-24 h-4 bg-borderSubtle rounded animate-pulse mt-1"></span>
-                </span>
             </div>
         </header>
 
@@ -167,7 +154,10 @@
             <section>
                 <div class="flex items-center justify-between mb-6 border-b border-borderSubtle pb-4">
                     <h2 class="text-2xl font-semibold tracking-tight text-white/90">Direct Holdings</h2>
-                    <span id="direct-count" class="text-xs font-mono bg-surface px-2 py-1 rounded text-gray-400 border border-borderSubtle">0 Assets</span>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-borderSubtle text-xs font-mono text-gray-400 uppercase tracking-widest shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
+                        20 Minute Delayed Data
+                    </div>
                 </div>
                 <div id="direct-grid" class="heatmap-grid">
                     <!-- Cells injected by JS -->
@@ -178,7 +168,6 @@
             <section>
                 <div class="flex items-center justify-between mb-6 border-b border-borderSubtle pb-4">
                     <h2 class="text-2xl font-semibold tracking-tight text-white/90">Funds</h2>
-                    <span id="fund-count" class="text-xs font-mono bg-surface px-2 py-1 rounded text-gray-400 border border-borderSubtle">0 Assets</span>
                 </div>
                 <div id="funds-grid" class="heatmap-grid">
                     <!-- Cells injected by JS -->
@@ -188,7 +177,7 @@
 
         <!-- Small Print Disclosure -->
         <footer class="mt-16 pt-8 border-t border-borderSubtle">
-            <p id="footer-disclosure" class="text-[11px] leading-relaxed text-gray-500 text-center sm:text-left max-w-4xl mx-auto">
+            <p id="footer-disclosure" class="text-[11px] leading-relaxed text-gray-500 text-left">
                 <!-- Loaded via JS -->
             </p>
         </footer>
@@ -198,6 +187,16 @@
     <script>
         // Data source provided by user
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYFqhdIu5rvsNMTXkwdTJ4LYbmh8p5nfqok0-EVVi271sbRzoFUVAZpRT3W1vE6ehLxSS4tGyO2C0h/pub?output=csv";
+
+        // Format Date to "10 Sep 2026"
+        function formatDate(dateStr) {
+            if (!dateStr || dateStr === "N/A") return dateStr;
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr; // fallback if invalid
+            
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+        }
 
         // Performance color interpolator based on daily percentage (-5% to +5% standard bounds)
         function getPerformanceColor(perfRaw) {
@@ -298,7 +297,8 @@
                         const introText = (data[0] && data[0][7]) ? data[0][7] : "Overview of my active investment portfolio and asset allocations.";
                         
                         // Last Updated: F2 (Row 1, Col 5)
-                        const lastUpdated = (data[1] && data[1][5]) ? data[1][5] : "N/A";
+                        const rawLastUpdated = (data[1] && data[1][5]) ? data[1][5] : "N/A";
+                        const lastUpdated = formatDate(rawLastUpdated);
 
                         // Small Print Disclosure: H3 (Row 2, Col 7)
                         const footerText = (data[2] && data[2][7]) ? data[2][7] : "";
@@ -348,15 +348,10 @@
         function renderUI(intro, dateText, footer, direct, funds) {
             // Update Headers
             document.getElementById('intro-text').innerText = intro;
-            document.getElementById('last-updated').innerText = dateText;
             
             // Update Footer
             document.getElementById('footer-disclosure').innerText = footer;
             
-            // Update Counts
-            document.getElementById('direct-count').innerText = `${direct.length} Asset${direct.length !== 1 ? 's' : ''}`;
-            document.getElementById('fund-count').innerText = `${funds.length} Asset${funds.length !== 1 ? 's' : ''}`;
-
             // Render Grids
             const directGrid = document.getElementById('direct-grid');
             const fundsGrid = document.getElementById('funds-grid');
