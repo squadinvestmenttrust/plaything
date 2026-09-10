@@ -1,518 +1,393 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANZ Corporate Intranet - Flat Earth Society Compliance Portal</title>
+    <title>Investment Disclosure</title>
+    
+    <!-- Fonts: Inter for UI, JetBrains Mono for Tickers & Numbers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
                     colors: {
-                        anz: {
-                            navy: '#004165',
-                            dark: '#002845',
-                            blue: '#007DBA',
-                            light: '#E6F2F8',
-                            accent: '#00B2E3'
+                        black: '#050505',
+                        surface: '#111113',
+                        borderSubtle: '#222225',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
                         }
                     }
                 }
             }
         }
     </script>
-    <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+    <!-- PapaParse for robust CSV processing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
     <style>
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f0f4f8;
-            color: #0f172a;
+            background-color: #050505;
+            color: #ffffff;
+            /* Subtle grid background to look technical */
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center top;
         }
-        .serif-font {
-            font-family: 'Playfair Display', Georgia, serif;
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        @keyframes shake {
-            0%, 100% { transform: translate(0, 0); }
-            10%, 30%, 50%, 70%, 90% { transform: translate(-6px, 0); }
-            20%, 40%, 60%, 80% { transform: translate(6px, 0); }
+        ::-webkit-scrollbar-track {
+            background: #050505; 
         }
-        .animate-shake {
-            animation: shake 0.4s ease-in-out both;
+        ::-webkit-scrollbar-thumb {
+            background: #222225; 
+            border-radius: 4px;
         }
-        @keyframes alert-glow {
-            0%, 100% { border-color: #dc2626; box-shadow: 0 0 15px rgba(220, 38, 38, 0.4); }
-            50% { border-color: #ef4444; box-shadow: 0 0 25px rgba(239, 68, 68, 0.7); }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #333; 
         }
-        .corporate-alert {
-            animation: alert-glow 1s infinite;
+
+        /* Heatmap Grid Setup */
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+            width: 100%;
+        }
+
+        @media (min-width: 640px) {
+            .heatmap-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 12px;
+            }
+        }
+
+        /* Heatmap Cell Base */
+        .heatmap-cell {
+            aspect-ratio: 1 / 1;
+            opacity: 0; /* Handled by JS animation */
+            will-change: transform, opacity;
+        }
+
+        /* Ambient Glow effect behind main container */
+        .ambient-glow {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 400px;
+            background: radial-gradient(circle, rgba(50,50,80,0.15) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            pointer-events: none;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between bg-slate-100 text-slate-800 selection:bg-anz-blue selection:text-white">
+<body class="antialiased min-h-screen relative pb-20">
 
-    <!-- ANZ Intranet Corporate Header -->
-    <header class="w-full bg-anz-navy text-white shadow-md border-b-4 border-anz-accent">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <!-- ANZ Style Logo Emblem -->
-                <div class="bg-white text-anz-navy font-black tracking-tighter px-2.5 py-1 rounded text-xl md:text-2xl flex items-center gap-1 shadow-inner">
-                    <span>ANZ</span>
-                    <span class="text-anz-blue text-xs font-semibold uppercase tracking-widest pl-1 border-l border-slate-300">Internal</span>
+    <div class="ambient-glow"></div>
+
+    <main class="max-w-6xl mx-auto px-6 pt-16 sm:pt-24 relative z-10">
+        
+        <!-- Header Section -->
+        <header class="mb-16 text-center sm:text-left flex flex-col sm:flex-row sm:items-end justify-between gap-6 animate-slide-up">
+            <div class="space-y-4 max-w-2xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-borderSubtle text-xs font-mono text-gray-400 uppercase tracking-widest shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
+                    20 Minute Delayed Data
                 </div>
-                <div class="hidden sm:block text-xs border-l border-slate-600 pl-3 text-slate-300">
-                    <p class="font-bold uppercase tracking-wider text-white">Global Employee Services</p>
-                    <p class="text-[10px] text-slate-400">Intranet Governance & Disc Compliance Division</p>
-                </div>
+                <h1 class="text-4xl sm:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
+                    Portfolio
+                </h1>
+                <!-- H1 Intro Text Target -->
+                <p id="intro-text" class="text-gray-400 text-sm sm:text-base leading-relaxed max-w-xl">
+                    <!-- Loaded via JS -->
+                    <span class="inline-block w-48 h-4 bg-surface rounded animate-pulse"></span>
+                    <span class="inline-block w-32 h-4 bg-surface rounded animate-pulse"></span>
+                </p>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-anz-blue text-white shadow-sm">
-                    🔒 HR Verified Portal
+            
+            <!-- F2 Last Updated Target -->
+            <div class="text-sm font-mono text-gray-500 text-center sm:text-right bg-surface px-4 py-2 rounded-lg border border-borderSubtle shadow-sm">
+                Last Updated<br>
+                <span id="last-updated" class="text-white font-medium">
+                    <!-- Loaded via JS -->
+                    <span class="inline-block w-24 h-4 bg-borderSubtle rounded animate-pulse mt-1"></span>
                 </span>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- Sub-header Banner -->
-    <div class="bg-anz-dark text-slate-300 text-xs py-2 px-4 border-b border-slate-700">
-        <div class="max-w-5xl mx-auto flex flex-wrap justify-between items-center gap-2">
-            <div>
-                <span class="text-anz-accent font-bold">ANNOUNCEMENT:</span> mandatory screening for all ANZ Flat Earth Society Committee applicants.
-            </div>
-            <div class="text-[11px] text-slate-400 font-mono">
-                System Status: <span class="text-emerald-400 font-bold">100% LEVEL</span>
+        <!-- Loading Skeleton -->
+        <div id="loading-state" class="space-y-16">
+            <div class="space-y-6">
+                <div class="h-8 w-48 bg-surface rounded animate-pulse"></div>
+                <div class="heatmap-grid">
+                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
+                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
+                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
+                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
+                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
+                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Main Container -->
-    <main class="w-full max-w-3xl mx-auto p-4 md:p-6 my-auto">
-        
-        <div class="bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden relative">
+        <!-- Content Container (Hidden initially) -->
+        <div id="content-container" class="space-y-16 hidden">
             
-            <!-- START SCREEN -->
-            <div id="start-screen" class="p-6 md:p-10 space-y-6">
-                <div class="border-b border-slate-200 pb-5">
-                    <div class="text-xs font-bold text-anz-blue tracking-widest uppercase mb-1">Internal Committee Application</div>
-                    <h1 class="text-2xl md:text-3xl font-extrabold text-anz-navy tracking-tight">
-                        ANZ Flat Earth Society — Membership Entrance Exam
-                    </h1>
-                    <p class="text-slate-600 text-sm mt-2 leading-relaxed">
-                        Welcome, colleague. Prior to granting access to the official <strong>ANZ Flat Earth Society Intranet Community & Committee Channel</strong>, all employees must pass this 10-question Disc Purity Assessment.
-                    </p>
+            <!-- Direct Holdings Section -->
+            <section>
+                <div class="flex items-center justify-between mb-6 border-b border-borderSubtle pb-4">
+                    <h2 class="text-2xl font-semibold tracking-tight text-white/90">Direct Holdings</h2>
+                    <span id="direct-count" class="text-xs font-mono bg-surface px-2 py-1 rounded text-gray-400 border border-borderSubtle">0 Assets</span>
                 </div>
-
-                <div class="bg-anz-light border-l-4 border-anz-blue p-4 rounded-r-lg text-xs md:text-sm text-anz-navy space-y-2">
-                    <div class="font-bold flex items-center gap-1.5 text-anz-navy">
-                        <span>📋</span> <span>Assessment Terms & Conditions:</span>
-                    </div>
-                    <ul class="list-disc list-inside space-y-1 text-slate-700">
-                        <li>This exam consists of 10 mandatory single-choice questions.</li>
-                        <li><strong>Zero Tolerance Policy:</strong> Selecting any Round-Earth or NASA-aligned response results in <span class="text-red-600 font-bold">immediate disqualification</span>.</li>
-                        <li>Passing candidates will receive an official digital ANZ FES Certificate suitable for desk display.</li>
-                    </ul>
+                <div id="direct-grid" class="heatmap-grid">
+                    <!-- Cells injected by JS -->
                 </div>
+            </section>
 
-                <div class="space-y-3 pt-2">
-                    <button onclick="quiz.start()" class="w-full py-4 bg-anz-navy hover:bg-anz-dark text-white font-bold text-base rounded-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group border-b-4 border-anz-dark">
-                        <span>START MEMBERSHIP EXAMINATION</span>
-                        <span class="group-hover:translate-x-1 transition-transform">➔</span>
-                    </button>
-                    <p class="text-center text-[11px] text-slate-400">
-                        By clicking above, you confirm you do not believe water can stick to a spinning ball.
-                    </p>
+            <!-- Funds Section -->
+            <section>
+                <div class="flex items-center justify-between mb-6 border-b border-borderSubtle pb-4">
+                    <h2 class="text-2xl font-semibold tracking-tight text-white/90">Funds</h2>
+                    <span id="fund-count" class="text-xs font-mono bg-surface px-2 py-1 rounded text-gray-400 border border-borderSubtle">0 Assets</span>
                 </div>
-            </div>
-
-            <!-- QUIZ SCREEN -->
-            <div id="quiz-screen" class="hidden p-6 md:p-8 space-y-6">
-                <!-- Progress Header -->
-                <div class="space-y-2 border-b border-slate-100 pb-4">
-                    <div class="flex justify-between items-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                        <span id="question-number" class="text-anz-navy font-bold">Question 1 of 10</span>
-                        <span id="disc-level" class="bg-sky-100 text-anz-navy px-2.5 py-1 rounded-full text-[11px]">Clearance: Junior Flat Officer</span>
-                    </div>
-                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden border border-slate-200">
-                        <div id="progress-bar" class="bg-anz-blue h-full transition-all duration-300" style="width: 10%"></div>
-                    </div>
+                <div id="funds-grid" class="heatmap-grid">
+                    <!-- Cells injected by JS -->
                 </div>
-
-                <!-- Question Card -->
-                <div class="space-y-3">
-                    <div class="inline-block px-2.5 py-1 bg-slate-100 text-slate-600 font-mono text-[11px] font-bold uppercase rounded border border-slate-200">
-                        Topic: <span id="question-tag" class="text-anz-navy">Basic Geometry</span>
-                    </div>
-                    <h2 id="question-text" class="text-lg md:text-xl font-bold text-anz-navy leading-snug">
-                        Question text goes here?
-                    </h2>
-                </div>
-
-                <!-- Options -->
-                <div id="options-container" class="space-y-3 pt-2">
-                    <!-- Dynamic Buttons -->
-                </div>
-            </div>
-
-            <!-- DISQUALIFIED SCREEN -->
-            <div id="disqualified-screen" class="hidden p-6 md:p-8 space-y-6 corporate-alert bg-red-50/50">
-                <div class="text-center space-y-3 border-b border-red-200 pb-5">
-                    <div class="inline-flex p-3 rounded-full bg-red-100 text-red-600 text-3xl">
-                        🛑
-                    </div>
-                    <h2 class="text-2xl font-black text-red-700 tracking-tight uppercase">
-                        APPLICATION REJECTED
-                    </h2>
-                    <p class="text-xs font-mono text-red-600 font-bold">
-                        REASON: GLOBE-HEAD / SPHERICAL PROPAGANDA DETECTED
-                    </p>
-                </div>
-
-                <div class="bg-white p-4 rounded-lg border border-red-200 text-xs text-slate-700 space-y-2 shadow-sm">
-                    <p id="fail-reason" class="font-bold text-slate-900 text-sm">
-                        You answered like someone who believes gravity pulls water onto the bottom of a spinning globe!
-                    </p>
-                    <div class="pt-2 border-t border-slate-100 text-slate-500 space-y-1">
-                        <p>• Your intranet IP address has been flagged for curvature bias.</p>
-                        <p>• Please complete mandatory retraining on "The Horizon is Always Flat".</p>
-                        <p>• ANZ Flat Earth Society intranet community access is currently <strong class="text-red-600">DENIED</strong>.</p>
-                    </div>
-                </div>
-
-                <button onclick="quiz.reset()" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold text-sm rounded-lg transition shadow-md uppercase tracking-wider">
-                    🔄 Acknowledge & Retry Examination
-                </button>
-            </div>
-
-            <!-- VICTORY SCREEN -->
-            <div id="victory-screen" class="hidden p-6 md:p-8 space-y-6">
-                <div class="text-center space-y-2">
-                    <span class="text-4xl">🎉</span>
-                    <h2 class="text-2xl font-black text-anz-navy uppercase tracking-tight">
-                        EXAMINATION PASSED!
-                    </h2>
-                    <p class="text-sm text-slate-600">
-                        You have demonstrated 100% Disc Compliance. Welcome to the ANZ Flat Earth Society!
-                    </p>
-                </div>
-
-                <!-- ANZ Corporate Certificate -->
-                <div id="certificate" class="bg-slate-50 p-6 rounded-xl border-4 border-anz-navy shadow-lg relative overflow-hidden space-y-4">
-                    <div class="absolute -right-8 -bottom-8 text-slate-200/40 text-9xl font-black pointer-events-none select-none">
-                        ANZ
-                    </div>
-
-                    <div class="border border-slate-300 p-5 rounded-lg bg-white space-y-4 relative z-10">
-                        <div class="flex justify-between items-center border-b-2 border-anz-navy pb-3">
-                            <div>
-                                <h3 class="font-black text-xl text-anz-navy tracking-tight">ANZ FLAT EARTH SOCIETY</h3>
-                                <p class="text-[10px] text-anz-blue font-bold uppercase tracking-widest">Official Internal Certificate of Membership</p>
-                            </div>
-                            <div class="bg-anz-navy text-white text-xs font-black px-2.5 py-1 rounded">
-                                APPROVED
-                            </div>
-                        </div>
-
-                        <div class="text-center py-2 space-y-1">
-                            <p class="text-xs uppercase text-slate-500 font-semibold tracking-wider">This officially confirms that</p>
-                            <input type="text" id="member-name" placeholder="CLICK HERE TO ENTER YOUR NAME" value="Valued ANZ Employee" class="text-center font-black text-lg md:text-xl text-anz-navy bg-amber-50/50 border-b-2 border-anz-blue focus:outline-none w-full px-2 py-1 serif-font">
-                            <p class="text-xs text-slate-600 italic pt-1">
-                                has passed all 10 Level Purity Modules and is officially cleared to join the ANZ Flat Earth Committee Intranet Channel.
-                            </p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-2 text-[10px] font-mono bg-slate-50 p-2.5 rounded border border-slate-200 text-slate-700">
-                            <div><strong>EMPLOYEE ID:</strong> <span class="text-anz-blue">ANZ-DISC-9021</span></div>
-                            <div><strong>CLEARANCE:</strong> LEVEL 1 FLAT OFFICER</div>
-                            <div><strong>GRAVITY STATUS:</strong> REJECTED</div>
-                            <div><strong>ICE WALL PASS:</strong> GRANTED</div>
-                        </div>
-
-                        <div class="flex justify-between items-end pt-2 text-xs">
-                            <div>
-                                <div class="font-bold text-anz-navy">Global Head of Flat Banking</div>
-                                <div class="text-[9px] text-slate-500 uppercase">ANZ Flat Earth Intranet Committee</div>
-                            </div>
-                            <div class="w-14 h-14 border-2 border-anz-blue rounded-full flex flex-col items-center justify-center text-anz-blue font-bold text-[8px] text-center rotate-12 bg-sky-50">
-                                <span>OFFICIAL</span>
-                                <span class="font-black text-xs">ANZ</span>
-                                <span>VERIFIED</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-3 pt-2">
-                    <button onclick="window.print()" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded-lg transition border border-slate-700 flex items-center justify-center gap-2">
-                        <span>🖨️ Print Certificate for Desk</span>
-                    </button>
-                    <button onclick="quiz.reset()" class="flex-1 py-3 bg-anz-navy hover:bg-anz-dark text-white font-bold text-sm rounded-lg transition flex items-center justify-center gap-2">
-                        <span>🔄 Retake Exam</span>
-                    </button>
-                </div>
-            </div>
-
+            </section>
         </div>
+
+        <!-- Small Print Disclosure -->
+        <footer class="mt-16 pt-8 border-t border-borderSubtle">
+            <p id="footer-disclosure" class="text-[11px] leading-relaxed text-gray-500 text-center sm:text-left max-w-4xl mx-auto">
+                <!-- Loaded via JS -->
+            </p>
+        </footer>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="w-full bg-white border-t border-slate-200 py-4 px-4 text-center text-xs text-slate-500 space-y-1">
-        <p class="font-semibold text-slate-600">ANZ Flat Earth Society — Internal Satirical Intranet Portal</p>
-        <p class="text-[10px] text-slate-400">Disclaimer: For employee entertainment purposes only. No actual banking curvature was altered during this exam.</p>
-    </footer>
-
-    <!-- Audio Synthesizer & Logic -->
     <script>
-        // Web Audio API Synthesizer
-        class SoundFX {
-            constructor() { this.ctx = null; }
-            init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
-            playCorrect() {
-                this.init();
-                const now = this.ctx.currentTime;
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(523.25, now);
-                osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1);
-                osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.2);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.start(now); osc.stop(now + 0.3);
+        // Data source provided by user
+        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYFqhdIu5rvsNMTXkwdTJ4LYbmh8p5nfqok0-EVVi271sbRzoFUVAZpRT3W1vE6ehLxSS4tGyO2C0h/pub?output=csv";
+
+        // Performance color interpolator based on daily percentage (-5% to +5% standard bounds)
+        function getPerformanceColor(perfRaw) {
+            const clampValue = Math.max(-5, Math.min(5, perfRaw));
+            
+            if (clampValue > 0) {
+                // Interpolate 0 to 5 -> Green shades
+                const intensity = clampValue / 5;
+                // Dark green to Bright robinhood green (#0ecb81)
+                const r = Math.round(15 + (14 - 15) * intensity);
+                const g = Math.round(45 + (203 - 45) * intensity);
+                const b = Math.round(30 + (129 - 30) * intensity);
+                return `rgb(${r}, ${g}, ${b})`;
+            } else if (clampValue < 0) {
+                // Interpolate 0 to -5 -> Red shades
+                const intensity = Math.abs(clampValue) / 5;
+                // Dark red to Bright red (#f6465d)
+                const r = Math.round(50 + (246 - 50) * intensity);
+                const g = Math.round(15 + (70 - 15) * intensity);
+                const b = Math.round(20 + (93 - 20) * intensity);
+                return `rgb(${r}, ${g}, ${b})`;
             }
-            playWrong() {
-                this.init();
-                const now = this.ctx.currentTime;
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(160, now);
-                osc.frequency.linearRampToValueAtTime(70, now + 0.35);
-                gain.gain.setValueAtTime(0.25, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.start(now); osc.stop(now + 0.35);
-            }
-            playVictory() {
-                this.init();
-                const now = this.ctx.currentTime;
-                const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
-                notes.forEach((freq, idx) => {
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-                    gain.gain.setValueAtTime(0.15, now + idx * 0.08);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.2);
-                    osc.connect(gain); gain.connect(this.ctx.destination);
-                    osc.start(now + idx * 0.08); osc.stop(now + idx * 0.08 + 0.2);
-                });
-            }
+            
+            // Neutral for exactly 0%
+            return '#181a20'; 
         }
 
-        const sfx = new SoundFX();
+        // Parse performance strings intelligently (e.g. "1.5%", "0.015", "-2.1%")
+        function parsePerformance(val) {
+            if (!val || typeof val !== 'string') return { raw: 0, text: "0.00%", class: "text-gray-400" };
+            
+            // If the cell contains non-numerical status text or date strings, default to 0
+            const cleaned = val.replace(/[^0-9.-]/g, '');
+            let num = parseFloat(cleaned);
+            if (isNaN(num)) num = 0;
 
-        // ANZ Custom Question Set
-        const questions = [
-            {
-                topic: "Basic Banking & Geometry",
-                question: "What is the official shape of the planet Earth, according to flat-earther bank logic?",
-                options: [
-                    { text: "A stable, flat, level disc where account balances never tip over.", correct: true },
-                    { text: "A spinning, wet spherical marble hurtling through space at 67,000 mph.", correct: false, failReason: "A spinning globe would cause all digital currency to slip off the edge of the server!" }
-                ]
-            },
-            {
-                topic: "Corporate Physics",
-                question: "How do we explain objects staying on the floor in ANZ branch offices?",
-                options: [
-                    { text: "Gravitational pull towards the mass center of a curved Earth.", correct: false, failReason: "Gravity is an unsubstantiated rumor. Please read your Employee Flat Handbook!" },
-                    { text: "Universal Acceleration — the flat disc earth accelerates upwards at 9.8m/s².", correct: true }
-                ]
-            },
-            {
-                topic: "Branch Architecture",
-                question: "Why are spirit levels used when building ANZ branches?",
-                options: [
-                    { text: "Because the bubble stays flat, proving the ground beneath is 100% horizontal disc.", correct: true },
-                    { text: "To compensate for the spherical curvature of the local Australian terrain.", correct: false, failReason: "If terrain was curved, our ATM machines would slide down the street!" }
-                ]
-            },
-            {
-                topic: "Trans-Tasman Operations",
-                question: "When flying between Australia and New Zealand, why do direct flight paths appear straight on our maps?",
-                options: [
-                    { text: "Because Great Circle spherical routes are shortest on a globe.", correct: false, failReason: "Incorrect! Pilot navigation systems are secretly set to 'Disc Mode'." },
-                    { text: "Because the Tasman Sea is completely flat and flat maps tell the true story.", correct: true }
-                ]
-            },
-            {
-                topic: "Solar Financial Accounting",
-                question: "What is the Sun, strictly speaking?",
-                options: [
-                    { text: "A local, 32-mile spotlight circling directly above the flat disc at close altitude.", correct: true },
-                    { text: "A giant nuclear fusion star located 150 million kilometers away.", correct: false, failReason: "150 million kilometers? Audit team checked: that distance is unverified expense!" }
-                ]
-            },
-            {
-                topic: "Antarctic Border Policy",
-                question: "What actually exists at the far southern perimeter of the map?",
-                options: [
-                    { text: "A giant 150-foot Ice Wall guarding the edge of the water, patrolled by penguins.", correct: true },
-                    { text: "A snowy continent located at the bottom pole of a sphere.", correct: false, failReason: "Security alert! The Ice Wall holds the oceans in; do not question the guardians!" }
-                ]
-            },
-            {
-                topic: "Executive Authority",
-                question: "Who holds the most authority regarding Earth shape calculations?",
-                options: [
-                    { text: "Isaac Newton, Carl Sagan, and NASA space engineers.", correct: false, failReason: "Isaac Newton made up gravity after being hit on the head by fruit!" },
-                    { text: "Dave from ANZ Facilities, who measured the office hallway with a 30m tape measure.", correct: true }
-                ]
-            },
-            {
-                topic: "Space Agency Audit",
-                question: "What is NASA's main business function?",
-                options: [
-                    { text: "High-end CGI Hollywood graphics production and maintaining green-screen sets.", correct: true },
-                    { text: "Scientific exploration of outer space and satellite launching.", correct: false, failReason: "Space rockets curve sideways because they hit the dome and bounce off!" }
-                ]
-            },
-            {
-                topic: "Lunar Auditing",
-                question: "What causes a lunar eclipse during an ANZ financial quarter?",
-                options: [
-                    { text: "An invisible 'Shadow Object' passing in front of the self-luminous moon.", correct: true },
-                    { text: "The spherical Earth passing between the Sun and Moon.", correct: false, failReason: "How could a round sphere cast a flat shadow? Audit rejected!" }
-                ]
-            },
-            {
-                topic: "Ancient Economics",
-                question: "Eratosthenes measured shadows in 240 BC to estimate Earth's size. What went wrong?",
-                options: [
-                    { text: "He proved Earth was round using geometry.", correct: false, failReason: "He forgot to account for dome light refraction! Total beginner mistake." },
-                    { text: "He simply proved the Sun is close and small! Total rookie error.", correct: true }
-                ]
+            // Optional: If you export purely decimals (e.g., 0.015) vs percentages (1.5%)
+            // Assuming the CSV contains standard formatted percentages if they have a % sign.
+            if (!val.includes('%') && num < 1 && num > -1 && num !== 0 && val.includes('.')) {
+                // It MIGHT be a raw decimal, but let's trust the strict parser: we just show what we parse.
+                // We will treat it as the exact face value just in case.
             }
-        ];
 
-        // Quiz Controller
-        class Quiz {
-            constructor() {
-                this.currentIndex = 0;
-                this.startScreen = document.getElementById('start-screen');
-                this.quizScreen = document.getElementById('quiz-screen');
-                this.disqualifiedScreen = document.getElementById('disqualified-screen');
-                this.victoryScreen = document.getElementById('victory-screen');
+            const prefix = num > 0 ? "+" : "";
+            const text = `${prefix}${num.toFixed(2)}%`;
+            let textColorClass = "text-gray-300";
+            if (num > 0) textColorClass = "text-green-400";
+            if (num < 0) textColorClass = "text-red-400";
+
+            return { raw: num, text: text, class: textColorClass };
+        }
+
+        function createHeatmapCell(item, index) {
+            const cell = document.createElement('div');
+            const bgColor = getPerformanceColor(item.perf.raw);
+            
+            // Setup the container with transitions and tabindex for accessibility/mobile taps
+            cell.className = `heatmap-cell group relative w-full overflow-hidden rounded-xl cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.5)] border border-white/5 transition-transform hover:scale-[1.03] hover:z-10 focus:outline-none focus:ring-2 focus:ring-white/20`;
+            cell.style.backgroundColor = bgColor;
+            cell.style.animation = `slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 20}ms`;
+            cell.tabIndex = 0;
+
+            // Default State (Ticker)
+            const defaultState = document.createElement('div');
+            defaultState.className = `absolute inset-0 flex items-center justify-center transition-opacity duration-300 group-hover:opacity-0 group-focus:opacity-0`;
+            defaultState.innerHTML = `<span class="font-mono text-base sm:text-lg font-bold tracking-tight text-white/95 drop-shadow-md">${item.ticker}</span>`;
+
+            // Hover/Focus State (Name + Percentage)
+            const hoverState = document.createElement('div');
+            hoverState.className = `absolute inset-0 flex flex-col items-center justify-center p-2 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus:opacity-100 bg-black/60 backdrop-blur-[2px]`;
+            hoverState.innerHTML = `
+                <span class="text-[10px] sm:text-xs font-medium text-gray-100 line-clamp-2 leading-tight mb-1 drop-shadow-md">${item.name}</span>
+                <div class="flex flex-col items-center mt-1">
+                    <span class="text-[8px] sm:text-[9px] text-gray-400/90 uppercase tracking-widest leading-none mb-0.5">Daily Change</span>
+                    <span class="font-mono text-xs sm:text-sm font-bold drop-shadow-md ${item.perf.class}">${item.perf.text}</span>
+                </div>
+            `;
+
+            cell.appendChild(defaultState);
+            cell.appendChild(hoverState);
+            return cell;
+        }
+
+        async function fetchAndProcessData() {
+            try {
+                const response = await fetch(CSV_URL);
+                if (!response.ok) throw new Error("Network response was not ok");
+                const csvText = await response.text();
                 
-                this.questionNumber = document.getElementById('question-number');
-                this.discLevel = document.getElementById('disc-level');
-                this.progressBar = document.getElementById('progress-bar');
-                this.questionTag = document.getElementById('question-tag');
-                this.questionText = document.getElementById('question-text');
-                this.optionsContainer = document.getElementById('options-container');
-                this.failReason = document.getElementById('fail-reason');
-            }
+                Papa.parse(csvText, {
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        const data = results.data;
+                        if (!data || data.length === 0) throw new Error("Empty CSV data");
 
-            start() {
-                this.currentIndex = 0;
-                this.startScreen.classList.add('hidden');
-                this.disqualifiedScreen.classList.add('hidden');
-                this.victoryScreen.classList.add('hidden');
-                this.quizScreen.classList.remove('hidden');
-                this.loadQuestion();
-            }
+                        // Extract single-cell values as requested
+                        // Intro text: H1 (Row 0, Col 7)
+                        const introText = (data[0] && data[0][7]) ? data[0][7] : "Overview of my active investment portfolio and asset allocations.";
+                        
+                        // Last Updated: F2 (Row 1, Col 5)
+                        const lastUpdated = (data[1] && data[1][5]) ? data[1][5] : "N/A";
 
-            loadQuestion() {
-                const q = questions[this.currentIndex];
-                
-                // Progress
-                this.questionNumber.innerText = `Question ${this.currentIndex + 1} of ${questions.length}`;
-                const progressPercent = ((this.currentIndex + 1) / questions.length) * 100;
-                this.progressBar.style.width = `${progressPercent}%`;
+                        // Small Print Disclosure: H3 (Row 2, Col 7)
+                        const footerText = (data[2] && data[2][7]) ? data[2][7] : "";
 
-                // Clearance levels
-                const clearances = [
-                    "Junior Flat Trainee", "Branch Level Officer", "Tasman Disc Auditor", 
-                    "Dome Compliance Specialist", "Ice Wall Inspector", "Senior Disc Executive"
-                ];
-                const cIdx = Math.floor((this.currentIndex / questions.length) * clearances.length);
-                this.discLevel.innerText = `Clearance: ${clearances[cIdx]}`;
+                        const directHoldings = [];
+                        const funds = [];
 
-                // Content
-                this.questionTag.innerText = q.topic;
-                this.questionText.innerText = q.question;
+                        // Process rows (assuming row 0 might be headers, we start processing at row 1)
+                        // If row 1 contains actual data, it gets picked up. If D/E/F are headers in row 0, we skip row 0.
+                        for (let i = 1; i < data.length; i++) {
+                            const row = data[i];
 
-                // Shuffle options
-                const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+                            // Direct Holdings: Col A(0) Ticker, Col B(1) Name, Col C(2) Performance
+                            if (row[0] && row[0].trim() !== "" && row[0].trim().toLowerCase() !== "ticker") {
+                                directHoldings.push({
+                                    ticker: row[0].trim(),
+                                    name: row[1] ? row[1].trim() : "Unknown",
+                                    perf: parsePerformance(row[2])
+                                });
+                            }
 
-                this.optionsContainer.innerHTML = '';
-                shuffledOptions.forEach((opt) => {
-                    const btn = document.createElement('button');
-                    btn.className = "w-full text-left p-4 rounded-lg bg-slate-50 hover:bg-anz-light border-2 border-slate-200 hover:border-anz-blue transition-all font-medium text-sm md:text-base text-slate-800 flex items-start gap-3 group shadow-sm";
-                    btn.innerHTML = `
-                        <span class="w-6 h-6 rounded-full bg-slate-200 group-hover:bg-anz-blue group-hover:text-white flex items-center justify-center text-xs font-bold shrink-0 transition-colors mt-0.5 text-slate-600">
-                            ✓
-                        </span>
-                        <span>${opt.text}</span>
-                    `;
-                    btn.onclick = () => this.handleAnswer(opt);
-                    this.optionsContainer.appendChild(btn);
-                });
-            }
+                            // Funds: Col D(3) Ticker, Col E(4) Name, Col F(5) Performance
+                            // Note: F2 contains the date. If i=1, row[5] is the date string.
+                            // parsePerformance safely handles date strings by returning 0%.
+                            if (row[3] && row[3].trim() !== "" && row[3].trim().toLowerCase() !== "ticker") {
+                                funds.push({
+                                    ticker: row[3].trim(),
+                                    name: row[4] ? row[4].trim() : "Unknown",
+                                    perf: parsePerformance(row[5])
+                                });
+                            }
+                        }
 
-            handleAnswer(option) {
-                if (option.correct) {
-                    sfx.playCorrect();
-                    this.currentIndex++;
-                    if (this.currentIndex < questions.length) {
-                        this.loadQuestion();
-                    } else {
-                        this.showVictory();
+                        renderUI(introText, lastUpdated, footerText, directHoldings, funds);
+                    },
+                    error: function(err) {
+                        showError("Failed to parse the data source.");
+                        console.error(err);
                     }
-                } else {
-                    sfx.playWrong();
-                    this.showDisqualified(option.failReason);
-                }
-            }
-
-            showDisqualified(reason) {
-                this.quizScreen.classList.add('hidden');
-                this.failReason.innerText = reason || "You answered like someone who believes water curves around a spinning ball.";
-                this.disqualifiedScreen.classList.remove('hidden');
-                
-                document.body.classList.add('animate-shake');
-                setTimeout(() => document.body.classList.remove('animate-shake'), 400);
-            }
-
-            showVictory() {
-                sfx.playVictory();
-                this.quizScreen.classList.add('hidden');
-                this.victoryScreen.classList.remove('hidden');
-                
-                if (typeof confetti === 'function') {
-                    confetti({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: { y: 0.6 }
-                    });
-                }
-            }
-
-            reset() {
-                this.start();
+                });
+            } catch (err) {
+                showError("Failed to connect to the disclosure source.");
+                console.error(err);
             }
         }
 
-        const quiz = new Quiz();
+        function renderUI(intro, dateText, footer, direct, funds) {
+            // Update Headers
+            document.getElementById('intro-text').innerText = intro;
+            document.getElementById('last-updated').innerText = dateText;
+            
+            // Update Footer
+            document.getElementById('footer-disclosure').innerText = footer;
+            
+            // Update Counts
+            document.getElementById('direct-count').innerText = `${direct.length} Asset${direct.length !== 1 ? 's' : ''}`;
+            document.getElementById('fund-count').innerText = `${funds.length} Asset${funds.length !== 1 ? 's' : ''}`;
+
+            // Render Grids
+            const directGrid = document.getElementById('direct-grid');
+            const fundsGrid = document.getElementById('funds-grid');
+            
+            directGrid.innerHTML = '';
+            fundsGrid.innerHTML = '';
+
+            direct.forEach((item, index) => {
+                directGrid.appendChild(createHeatmapCell(item, index));
+            });
+
+            funds.forEach((item, index) => {
+                fundsGrid.appendChild(createHeatmapCell(item, index));
+            });
+
+            // Transition UI States
+            document.getElementById('loading-state').classList.add('hidden');
+            const content = document.getElementById('content-container');
+            content.classList.remove('hidden');
+            content.classList.add('animate-fade-in');
+        }
+
+        function showError(msg) {
+            document.getElementById('intro-text').innerHTML = `<span class="text-red-400 border border-red-400/20 bg-red-400/10 px-3 py-1 rounded">Error: ${msg}</span>`;
+            document.getElementById('loading-state').innerHTML = `<p class="text-gray-500 italic px-4">The heatmap data is currently unavailable. Please verify the Google Sheets URL.</p>`;
+        }
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchAndProcessData();
+        });
     </script>
 </body>
 </html>
