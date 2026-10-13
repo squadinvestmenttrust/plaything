@@ -1,388 +1,1170 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investment Disclosure</title>
-    
-    <!-- Fonts: Inter for UI, JetBrains Mono for Tickers & Numbers -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        black: '#050505',
-                        surface: '#111113',
-                        borderSubtle: '#222225',
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-out forwards',
-                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Bek! ✨ Design Your Day</title>
+
+  <!-- Google Fonts: Inter & Outfit for modern, colourful minimalist typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            blush: {
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              200: '#fecdd3',
+              300: '#fda4af',
+              400: '#fb7185',
+              500: '#f43f5e',
+              600: '#e11d48',
+            },
+            honey: {
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+            },
+            lavender: {
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+            },
+            mint: {
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              500: '#10b981',
             }
-        }
-    </script>
-
-    <!-- PapaParse for robust CSV processing -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-
-    <style>
-        body {
-            background-color: #050505;
-            color: #ffffff;
-            /* Subtle grid background to look technical */
-            background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: center top;
-        }
-
-        /* Hide scrollbar for clean look */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #050505; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #222225; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #333; 
-        }
-
-        /* Heatmap Grid Setup */
-        .heatmap-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 8px;
-            width: 100%;
-        }
-
-        @media (min-width: 640px) {
-            .heatmap-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-                gap: 12px;
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-10px) rotate(2deg)' },
+            },
+            pulseSlow: {
+              '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+              '50%': { opacity: '0.8', transform: 'scale(1.05)' },
+            },
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(16px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
             }
+          },
+          animation: {
+            float: 'float 6s ease-in-out infinite',
+            pulseSlow: 'pulseSlow 8s ease-in-out infinite',
+            fadeInUp: 'fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          }
         }
+      }
+    }
+  </script>
 
-        /* Heatmap Cell Base */
-        .heatmap-cell {
-            aspect-ratio: 1 / 1;
-            opacity: 0; /* Handled by JS animation */
-            will-change: transform, opacity;
-        }
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
-        /* Ambient Glow effect behind main container */
-        .ambient-glow {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 400px;
-            background: radial-gradient(circle, rgba(50,50,80,0.15) 0%, rgba(0,0,0,0) 70%);
-            z-index: -1;
-            pointer-events: none;
-        }
-    </style>
+  <!-- Tone.js CDN for pleasant soft audio chimes -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+
+  <style>
+    /* Custom subtle styling for print, scrollbars, and card interactions */
+    body {
+      background-color: #faf7f5;
+      color: #1f2937;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 20px 40px -15px rgba(225, 29, 72, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .choice-card {
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .choice-card:hover {
+      transform: translateY(-4px) scale(1.015);
+      box-shadow: 0 16px 30px -10px rgba(244, 63, 94, 0.18);
+    }
+
+    .choice-card:active {
+      transform: translateY(0px) scale(0.99);
+    }
+
+    /* Print styles for a neat, physical keepsake */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .glass-card {
+        box-shadow: none !important;
+        border: 1px solid #e5e7eb !important;
+        backdrop-filter: none !important;
+      }
+    }
+  </style>
 </head>
-<body class="antialiased min-h-screen relative pb-20">
+<body class="flex flex-col min-h-screen selection:bg-blush-200 selection:text-blush-600">
 
-    <div class="ambient-glow"></div>
+  <!-- Ambient colorful floating background blobs -->
+  <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-blush-200/50 to-pink-300/40 rounded-full blur-3xl animate-pulseSlow"></div>
+    <div class="absolute top-1/3 -right-32 w-96 h-96 bg-gradient-to-bl from-honey-200/60 to-amber-200/40 rounded-full blur-3xl animate-pulseSlow" style="animation-delay: -3s;"></div>
+    <div class="absolute -bottom-32 left-1/4 w-[32rem] h-[32rem] bg-gradient-to-tr from-lavender-200/50 to-mint-100/50 rounded-full blur-3xl animate-pulseSlow" style="animation-delay: -5s;"></div>
+  </div>
 
-    <main class="max-w-6xl mx-auto px-6 pt-16 sm:pt-24 relative z-10">
-        
-        <!-- Header Section -->
-        <header class="mb-16 text-left animate-slide-up">
-            <div class="space-y-4 max-w-2xl">
-                <h1 class="text-4xl sm:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
-                    Portfolio
-                </h1>
-                <!-- H1 Intro Text Target -->
-                <p id="intro-text" class="text-gray-400 text-sm sm:text-base leading-relaxed max-w-xl">
-                    <!-- Loaded via JS -->
-                    <span class="inline-block w-48 h-4 bg-surface rounded animate-pulse"></span>
-                    <span class="inline-block w-32 h-4 bg-surface rounded animate-pulse"></span>
-                </p>
-            </div>
-        </header>
+  <!-- Header / Nav bar -->
+  <header class="no-print w-full max-w-4xl mx-auto px-6 py-6 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blush-500 to-honey-400 flex items-center justify-center text-white shadow-md shadow-blush-500/20">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="font-display font-bold text-lg text-gray-800 tracking-tight leading-none">Bek's Birthday</h1>
+        <p class="text-xs text-gray-400 mt-0.5">A day designed completely for you</p>
+      </div>
+    </div>
 
-        <!-- Loading Skeleton -->
-        <div id="loading-state" class="space-y-16">
-            <div class="space-y-6">
-                <div class="h-8 w-48 bg-surface rounded animate-pulse"></div>
-                <div class="heatmap-grid">
-                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
-                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
-                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
-                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
-                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
-                    <div class="bg-surface aspect-square rounded-xl animate-pulse"></div>
-                </div>
-            </div>
+    <!-- Quick action controls -->
+    <div class="flex items-center gap-2">
+      <!-- Audio toggle button -->
+      <button id="soundToggleBtn" onclick="toggleSound()" class="p-2.5 rounded-xl text-gray-500 hover:text-gray-800 hover:bg-white/60 transition-all border border-transparent hover:border-gray-200/80" title="Toggle gentle sound effects">
+        <svg id="soundOnIcon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+        </svg>
+        <svg id="soundOffIcon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+        </svg>
+      </button>
+
+      <!-- Live Sync / Data status modal trigger -->
+      <button onclick="openDataModal()" class="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 bg-white/70 hover:bg-white text-gray-600 hover:text-gray-900 border border-gray-200/60 shadow-sm transition">
+        <span id="syncStatusDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span id="syncStatusText">Connecting Sheet...</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="flex-grow flex items-center justify-center p-4 sm:p-6 w-full max-w-3xl mx-auto">
+
+    <!-- SCREEN 1: WELCOME INTRO -->
+    <section id="welcomeScreen" class="w-full text-center glass-card rounded-3xl p-8 sm:p-12 transition-all">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blush-50 border border-blush-200/60 text-blush-600 text-xs font-semibold mb-6">
+        <span>✨</span> It's Your Special Day
+      </div>
+      
+      <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-gray-900 tracking-tight leading-tight mb-4">
+        Happy Birthday, <span class="bg-gradient-to-r from-blush-500 via-rose-500 to-honey-500 bg-clip-text text-transparent">Bek!</span> 🎉
+      </h2>
+      
+      <p class="text-gray-600 text-base sm:text-lg max-w-xl mx-auto leading-relaxed mb-8">
+        Today has zero obligations, zero rush, and 100% of whatever makes you happiest. Answer a few fun choices to map out your dream birthday itinerary.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <button onclick="startQuestionnaire()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-blush-500 via-rose-500 to-pink-500 hover:from-blush-600 hover:to-pink-600 text-white font-display font-bold text-lg shadow-lg shadow-blush-500/25 hover:shadow-xl hover:shadow-blush-500/35 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3">
+          <span>Let's Plan Your Day</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-8 flex items-center justify-center gap-6 text-xs text-gray-400">
+        <span class="flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+          Tailored to your mood
+        </span>
+        <span class="flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+          Instant custom schedule
+        </span>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: ACTIVE QUESTION -->
+    <section id="questionScreen" class="w-full hidden glass-card rounded-3xl p-6 sm:p-10 transition-all">
+      <!-- Step bar & Breadcrumb -->
+      <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+        <div class="flex items-center gap-2">
+          <button id="backButton" onclick="goBack()" class="p-2 -ml-2 rounded-xl text-gray-400 hover:text-gray-800 hover:bg-gray-100/80 transition-colors flex items-center gap-1 text-xs font-semibold" title="Go back to previous choice">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Back</span>
+          </button>
+          <span class="text-xs font-medium text-gray-400 uppercase tracking-wider" id="questionStepLabel">Step 1</span>
+        </div>
+        <div class="flex items-center gap-1.5" id="progressDots">
+          <!-- Dynamic progress dots will be injected here -->
+        </div>
+      </div>
+
+      <!-- Question Title and context -->
+      <div class="mb-8">
+        <h3 id="questionText" class="font-display font-bold text-2xl sm:text-3xl text-gray-900 tracking-tight leading-snug">
+          Loading question...
+        </h3>
+        <p id="questionDescription" class="text-sm text-gray-500 mt-2 hidden"></p>
+      </div>
+
+      <!-- Options container -->
+      <div id="optionsContainer" class="grid grid-cols-1 gap-3.5">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- SCREEN 3: ITINERARY SUMMARY -->
+    <section id="summaryScreen" class="w-full hidden glass-card rounded-3xl p-6 sm:p-10 transition-all">
+      <!-- Header celebration -->
+      <div class="text-center pb-8 border-b border-gray-100">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-3xl bg-gradient-to-tr from-blush-500 to-honey-400 flex items-center justify-center text-3xl shadow-lg shadow-blush-500/20">
+          🥂
+        </div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold mb-3">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+          Itinerary Confirmed!
+        </div>
+        <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-gray-900 tracking-tight">
+          Bek's Birthday Plan ✨
+        </h2>
+        <p class="text-sm text-gray-500 mt-1 max-w-md mx-auto">
+          Here is your chosen sequence for the most wonderful birthday. Ready whenever you are!
+        </p>
+      </div>
+
+      <!-- Chronological Timeline List -->
+      <div id="itineraryList" class="py-8 space-y-4">
+        <!-- Injected dynamically -->
+      </div>
+
+      <!-- Action buttons -->
+      <div class="no-print pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button onclick="copyItinerary()" id="copyBtn" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-black text-white text-sm font-semibold flex items-center justify-center gap-2 shadow transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+            </svg>
+            <span id="copyBtnText">Copy Itinerary</span>
+          </button>
+          
+          <button onclick="window.print()" class="px-4 py-2.5 rounded-xl bg-white hover:bg-gray-50 text-gray-700 text-sm font-semibold border border-gray-200/80 shadow-sm flex items-center justify-center gap-2 transition" title="Print as physical keepsake or save PDF">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            <span>Print / PDF</span>
+          </button>
         </div>
 
-        <!-- Content Container (Hidden initially) -->
-        <div id="content-container" class="space-y-16 hidden">
-            
-            <!-- Direct Holdings Section -->
-            <section>
-                <div class="flex items-center justify-between mb-6 border-b border-borderSubtle pb-4">
-                    <h2 class="text-2xl font-semibold tracking-tight text-white/90">Direct Holdings</h2>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-borderSubtle text-xs font-mono text-gray-400 uppercase tracking-widest shadow-sm">
-                        <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
-                        20 Minute Delayed Data
-                    </div>
-                </div>
-                <div id="direct-grid" class="heatmap-grid">
-                    <!-- Cells injected by JS -->
-                </div>
-            </section>
+        <button onclick="restartQuestionnaire()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl text-gray-500 hover:text-gray-900 text-sm font-semibold flex items-center justify-center gap-1.5 hover:bg-gray-100/60 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span>Choose Again</span>
+        </button>
+      </div>
+    </section>
 
-            <!-- Funds Section -->
-            <section>
-                <div class="flex items-center justify-between mb-6 border-b border-borderSubtle pb-4">
-                    <h2 class="text-2xl font-semibold tracking-tight text-white/90">Funds</h2>
-                </div>
-                <div id="funds-grid" class="heatmap-grid">
-                    <!-- Cells injected by JS -->
-                </div>
-            </section>
+  </main>
+
+  <!-- Floating Toast notification -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900/90 backdrop-blur-md text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+    <span id="toastIcon">✨</span>
+    <span id="toastMessage">Copied to clipboard!</span>
+  </div>
+
+  <!-- Google Sheet Source Modal & Settings -->
+  <div id="dataModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <div>
+            <h4 class="font-display font-bold text-gray-900 text-base">Google Sheets Source</h4>
+            <p class="text-xs text-gray-400">Connection & branch data status</p>
+          </div>
+        </div>
+        <button onclick="closeDataModal()" class="p-2 text-gray-400 hover:text-gray-700 rounded-xl hover:bg-gray-100">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Active Google Sheet URL:</label>
+          <input type="text" id="sheetUrlInput" class="w-full text-xs font-mono bg-gray-50 border border-gray-200 rounded-xl p-2.5 text-gray-700 focus:outline-none focus:border-blush-500" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vQVgsAjuVIAeFWcVSKO3UJ78WBxll6i_LbbXdaoi-IK7QGLGD2cXMEiQstbwhWJwBMSzlVTh1FoH0_u/pubhtml">
         </div>
 
-        <!-- Small Print Disclosure -->
-        <footer class="mt-16 pt-8 border-t border-borderSubtle">
-            <p id="footer-disclosure" class="text-[11px] leading-relaxed text-gray-500 text-left">
-                <!-- Loaded via JS -->
-            </p>
-        </footer>
+        <div class="p-3 bg-gray-50 rounded-2xl border border-gray-100 text-xs space-y-1.5 text-gray-600">
+          <div class="flex justify-between">
+            <span class="text-gray-400">Connection state:</span>
+            <span id="modalStatusLabel" class="font-semibold text-amber-500">Connecting...</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Total questions loaded:</span>
+            <span id="modalQuestionCount" class="font-semibold text-gray-800">0</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Data source:</span>
+            <span id="modalSourceType" class="font-semibold text-gray-800">Pending</span>
+          </div>
+        </div>
 
-    </main>
+        <p class="text-xs text-gray-400 leading-relaxed">
+          Tip: Your sheet is automatically fetched upon page load. If Google takes a moment to sync new rows or CORS is active in certain browsers, the app seamlessly falls back to the embedded data tree so Bek never sees a broken page.
+        </p>
+      </div>
 
-    <script>
-        // Data source provided by user
-        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYFqhdIu5rvsNMTXkwdTJ4LYbmh8p5nfqok0-EVVi271sbRzoFUVAZpRT3W1vE6ehLxSS4tGyO2C0h/pub?output=csv";
+      <div class="pt-4 border-t border-gray-100 flex items-center justify-end gap-2">
+        <button onclick="refreshDataFromSheet()" class="px-4 py-2 rounded-xl bg-blush-500 hover:bg-blush-600 text-white font-semibold text-xs transition">
+          Force Re-sync Sheet
+        </button>
+      </div>
+    </div>
+  </div>
 
-        // Format Date to "10 Sep 2026"
-        function formatDate(dateStr) {
-            if (!dateStr || dateStr === "N/A") return dateStr;
-            const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return dateStr; // fallback if invalid
-            
-            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  <script>
+    /* =========================================================
+       1. DATA STRUCTURE & FALLBACK BIRTHDAY TREE
+       ========================================================= */
+
+    // Original Google Sheet URL provided by user
+    const GOOGLE_PUB_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVgsAjuVIAeFWcVSKO3UJ78WBxll6i_LbbXdaoi-IK7QGLGD2cXMEiQstbwhWJwBMSzlVTh1FoH0_u/pubhtml";
+    
+    // Convert pubhtml to CSV endpoint for clean machine fetching
+    function getCsvUrl(url) {
+      if (url.includes('/pubhtml')) {
+        return url.replace('/pubhtml', '/pub?output=csv');
+      }
+      if (!url.includes('output=csv')) {
+        return url + (url.includes('?') ? '&' : '?') + 'output=csv';
+      }
+      return url;
+    }
+
+    /**
+     * Default Birthday Adventure Data for Bek
+     * Fully structured so that if offline or awaiting sheet sync, 
+     * Bek gets an immaculate, thoughtful birthday experience right away!
+     */
+    const FALLBACK_QUESTIONS = [
+      {
+        id: "start",
+        text: "Good morning, birthday queen! ☀️ How do we start your day?",
+        description: "Choose the vibe for waking up today",
+        options: [
+          { text: "Slow morning & breakfast in bed", emoji: "🥐", nextId: "breakfast_cozy" },
+          { text: "Sunrise coffee walk & local bakery treat", emoji: "☕", nextId: "breakfast_walk" },
+          { text: "Sleep in until noon, zero alarms!", emoji: "🛏️", nextId: "midday_chill" }
+        ]
+      },
+      {
+        id: "breakfast_cozy",
+        text: "What’s the royal breakfast menu? 🥞",
+        description: "Chef's special for Bek",
+        options: [
+          { text: "Fluffy ricotta pancakes with berries & maple syrup", emoji: "🥞", nextId: "activity_time" },
+          { text: "Smashed avo on sourdough with poached eggs & halloumi", emoji: "🥑", nextId: "activity_time" },
+          { text: "Warm French croissants & freshly squeezed mimosas", emoji: "🥂", nextId: "activity_time" }
+        ]
+      },
+      {
+        id: "breakfast_walk",
+        text: "Where is our morning coffee destination? ☕",
+        description: "Pick your morning stroll spot",
+        options: [
+          { text: "Our favourite neighbourhood coffee spot", emoji: "🏘️", nextId: "activity_time" },
+          { text: "Scenic park & botanical garden walk", emoji: "🌿", nextId: "activity_time" },
+          { text: "Waterfront breeze with an iced matcha latte", emoji: "🌊", nextId: "activity_time" }
+        ]
+      },
+      {
+        id: "midday_chill",
+        text: "You wake up feeling rested and glowing! What’s first? ✨",
+        description: "Zero rush, pure relaxation",
+        options: [
+          { text: "A lavish mid-afternoon brunch feast", emoji: "🍳", nextId: "activity_time" },
+          { text: "Cozy book/podcast time with favourite tea", emoji: "📖", nextId: "activity_time" }
+        ]
+      },
+      {
+        id: "activity_time",
+        text: "What kind of afternoon energy are you craving? 🎨",
+        description: "It's playtime or pamper time",
+        options: [
+          { text: "Complete pampering: spa massage & facial", emoji: "💆‍♀️", nextId: "pamper_vibe" },
+          { text: "Adventure & shopping: boutique stroll & presents", emoji: "🛍️", nextId: "shopping_vibe" },
+          { text: "Cozy escape: picnic in the sun with a curated platter", emoji: "🧺", nextId: "picnic_vibe" }
+        ]
+      },
+      {
+        id: "pamper_vibe",
+        text: "How do you want to glow up? ✨",
+        description: "Pure self-care luxury",
+        options: [
+          { text: "Full body relaxation massage & herbal sauna", emoji: "🧖‍♀️", nextId: "dinner_scene" },
+          { text: "Nail day & beauty pamper session with champagne", emoji: "💅", nextId: "dinner_scene" }
+        ]
+      },
+      {
+        id: "shopping_vibe",
+        text: "Where should we hunt for birthday treasures? 🎁",
+        description: "No limits today",
+        options: [
+          { text: "Chic fashion boutiques & design stores", emoji: "👗", nextId: "dinner_scene" },
+          { text: "Local artisan markets & vintage gems", emoji: "🏺", nextId: "dinner_scene" },
+          { text: "Bookstores, stationery & luxury fragrance haul", emoji: "📚", nextId: "dinner_scene" }
+        ]
+      },
+      {
+        id: "picnic_vibe",
+        text: "What's in our birthday picnic basket? 🧀",
+        description: "Gourmet afternoon grazing",
+        options: [
+          { text: "Artisan cheese board, prosciutto, grapes & pet-nat", emoji: "🍷", nextId: "dinner_scene" },
+          { text: "Fresh sourdough sandwiches, sweet treats & iced tea", emoji: "🥪", nextId: "dinner_scene" }
+        ]
+      },
+      {
+        id: "dinner_scene",
+        text: "Dressed up for dinner! What cuisine do you desire? 🍽️",
+        description: "The main culinary highlight",
+        options: [
+          { text: "Intimate Italian: handmade pasta & rich red wine", emoji: "🍝", nextId: "evening_finale" },
+          { text: "Japanese Omakase / fresh sushi & sake pairings", emoji: "🍣", nextId: "evening_finale" },
+          { text: "Cosy candlelit French bistro with steak frites", emoji: "🕯️", nextId: "evening_finale" },
+          { text: "Secret rooftop bar with gourmet tapas & signature cocktails", emoji: "🍸", nextId: "evening_finale" }
+        ]
+      },
+      {
+        id: "evening_finale",
+        text: "How do we wrap up the best birthday ever? 🌙",
+        description: "The sweetest finale",
+        options: [
+          { text: "Artisan gelato walk under city fairy lights", emoji: "🍨", nextId: "END" },
+          { text: "Couch cuddle with favourite movie, popcorn & hot cocoa", emoji: "🍿", nextId: "END" },
+          { text: "Warm bubble bath with candles & a late nightcap", emoji: "🛁", nextId: "END" }
+        ]
+      }
+    ];
+
+    /* =========================================================
+       2. APPLICATION STATE
+       ========================================================= */
+
+    let questionsData = [];
+    let questionMap = {};
+    let initialQuestionId = null;
+    let currentQuestionId = null;
+    let userSelections = []; // Array of { questionId, questionText, answerText, emoji, nextId }
+    let soundEnabled = true;
+
+    /* =========================================================
+       3. AUDIO EFFECTS (Tone.js)
+       ========================================================= */
+    let synth = null;
+    function initSynth() {
+      if (!synth && typeof Tone !== 'undefined') {
+        try {
+          synth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: 'sine' },
+            envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.5 }
+          }).toDestination();
+          synth.volume.value = -12;
+        } catch (e) {
+          console.log("Audio not initialized yet:", e);
+        }
+      }
+    }
+
+    function playChime(type) {
+      if (!soundEnabled) return;
+      try {
+        if (Tone.context.state !== 'running') {
+          Tone.start();
+        }
+        initSynth();
+        if (!synth) return;
+
+        if (type === 'click') {
+          synth.triggerAttackRelease(['E5', 'A5'], '16n');
+        } else if (type === 'back') {
+          synth.triggerAttackRelease(['A4', 'E4'], '16n');
+        } else if (type === 'finish') {
+          const now = Tone.now();
+          synth.triggerAttackRelease('C5', '8n', now);
+          synth.triggerAttackRelease('E5', '8n', now + 0.1);
+          synth.triggerAttackRelease('G5', '8n', now + 0.2);
+          synth.triggerAttackRelease('C6', '4n', now + 0.3);
+        }
+      } catch (e) {
+        // Audio error silent fallback
+      }
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const onIcon = document.getElementById('soundOnIcon');
+      const offIcon = document.getElementById('soundOffIcon');
+      if (soundEnabled) {
+        onIcon.classList.remove('hidden');
+        offIcon.classList.add('hidden');
+        showToast('Sound effects enabled 🔔');
+        playChime('click');
+      } else {
+        onIcon.classList.add('hidden');
+        offIcon.classList.remove('hidden');
+        showToast('Sound muted 🔕');
+      }
+    }
+
+    /* =========================================================
+       4. GOOGLE SHEET FETCHER & UNIVERSAL CSV PARSER
+       ========================================================= */
+
+    /**
+     * Parses standard CSV strings handling double-quotes and line breaks
+     */
+    function parseCSVText(text) {
+      const rows = [];
+      let currentRow = [];
+      let currentVal = '';
+      let insideQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i + 1];
+
+        if (char === '"') {
+          if (insideQuotes && nextChar === '"') {
+            currentVal += '"';
+            i++; // skip escaped quote
+          } else {
+            insideQuotes = !insideQuotes;
+          }
+        } else if (char === ',' && !insideQuotes) {
+          currentRow.push(currentVal.trim());
+          currentVal = '';
+        } else if ((char === '\r' || char === '\n') && !insideQuotes) {
+          if (char === '\r' && nextChar === '\n') i++;
+          currentRow.push(currentVal.trim());
+          if (currentRow.some(c => c.length > 0)) {
+            rows.push(currentRow);
+          }
+          currentRow = [];
+          currentVal = '';
+        } else {
+          currentVal += char;
+        }
+      }
+
+      if (currentVal || currentRow.length > 0) {
+        currentRow.push(currentVal.trim());
+        if (currentRow.some(c => c.length > 0)) {
+          rows.push(currentRow);
+        }
+      }
+
+      return rows;
+    }
+
+    /**
+     * Intelligently interprets various table structures:
+     * Format A: Long table (Question ID, Question, Answer/Choice, Next ID)
+     * Format B: Wide table (ID, Question, Option 1, Next 1, Option 2, Next 2, ...)
+     */
+    function processSheetRows(rows) {
+      if (!rows || rows.length < 2) return null;
+
+      const headerRow = rows[0].map(h => h.toLowerCase().trim());
+      
+      // Look for standard column indexes
+      const qIdIdx = headerRow.findIndex(h => h === 'id' || h.includes('question id') || h === 'step' || h === 'no' || h === 'q_id');
+      const qTextIdx = headerRow.findIndex(h => h === 'question' || h.includes('question text') || h === 'prompt' || h === 'title');
+      const ansIdx = headerRow.findIndex(h => h === 'answer' || h === 'choice' || h === 'option' || h.includes('answer text'));
+      const nextIdx = headerRow.findIndex(h => h === 'next' || h === 'next id' || h.includes('next question') || h.includes('target') || h === 'goto');
+      const emojiIdx = headerRow.findIndex(h => h === 'emoji' || h === 'icon');
+      const descIdx = headerRow.findIndex(h => h === 'description' || h === 'subtitle' || h === 'note');
+
+      // Check if format is Long (Format A: one row per answer option)
+      if (qTextIdx !== -1 && ansIdx !== -1) {
+        const questionMapTemp = {};
+        const orderedIds = [];
+
+        for (let r = 1; r < rows.length; r++) {
+          const row = rows[r];
+          const rawQText = row[qTextIdx] || '';
+          if (!rawQText) continue;
+
+          // Generate or use ID
+          const rawId = qIdIdx !== -1 && row[qIdIdx] ? row[qIdIdx].trim() : `q_${r}`;
+          const answerText = row[ansIdx] || '';
+          if (!answerText) continue;
+
+          const nextVal = nextIdx !== -1 && row[nextIdx] ? row[nextIdx].trim() : 'END';
+          const emojiVal = emojiIdx !== -1 && row[emojiIdx] ? row[emojiIdx].trim() : '';
+          const descVal = descIdx !== -1 && row[descIdx] ? row[descIdx].trim() : '';
+
+          if (!questionMapTemp[rawId]) {
+            questionMapTemp[rawId] = {
+              id: rawId,
+              text: rawQText,
+              description: descVal,
+              options: []
+            };
+            orderedIds.push(rawId);
+          }
+
+          questionMapTemp[rawId].options.push({
+            text: answerText,
+            emoji: emojiVal,
+            nextId: nextVal
+          });
         }
 
-        // Performance color interpolator based on daily percentage (-5% to +5% standard bounds)
-        function getPerformanceColor(perfRaw) {
-            const clampValue = Math.max(-5, Math.min(5, perfRaw));
-            
-            if (clampValue > 0) {
-                // Interpolate 0 to 5 -> Green shades
-                const intensity = clampValue / 5;
-                // Dark green to Bright robinhood green (#0ecb81)
-                const r = Math.round(15 + (14 - 15) * intensity);
-                const g = Math.round(45 + (203 - 45) * intensity);
-                const b = Math.round(30 + (129 - 30) * intensity);
-                return `rgb(${r}, ${g}, ${b})`;
-            } else if (clampValue < 0) {
-                // Interpolate 0 to -5 -> Red shades
-                const intensity = Math.abs(clampValue) / 5;
-                // Dark red to Bright red (#f6465d)
-                const r = Math.round(50 + (246 - 50) * intensity);
-                const g = Math.round(15 + (70 - 15) * intensity);
-                const b = Math.round(20 + (93 - 20) * intensity);
-                return `rgb(${r}, ${g}, ${b})`;
-            }
-            
-            // Neutral for exactly 0%
-            return '#181a20'; 
-        }
+        const compiled = orderedIds.map(id => questionMapTemp[id]);
+        if (compiled.length > 0) return compiled;
+      }
 
-        // Parse performance strings intelligently (e.g. "1.5%", "0.015", "-2.1%")
-        function parsePerformance(val) {
-            if (!val || typeof val !== 'string') return { raw: 0, text: "0.00%", class: "text-gray-400" };
-            
-            // If the cell contains non-numerical status text or date strings, default to 0
-            const cleaned = val.replace(/[^0-9.-]/g, '');
-            let num = parseFloat(cleaned);
-            if (isNaN(num)) num = 0;
+      // Check if format is Wide (Format B: Option 1, Next 1, Option 2, Next 2...)
+      if (qTextIdx !== -1) {
+        const compiled = [];
+        for (let r = 1; r < rows.length; r++) {
+          const row = rows[r];
+          const qText = row[qTextIdx] || '';
+          if (!qText) continue;
 
-            // Optional: If you export purely decimals (e.g., 0.015) vs percentages (1.5%)
-            // Assuming the CSV contains standard formatted percentages if they have a % sign.
-            if (!val.includes('%') && num < 1 && num > -1 && num !== 0 && val.includes('.')) {
-                // It MIGHT be a raw decimal, but let's trust the strict parser: we just show what we parse.
-                // We will treat it as the exact face value just in case.
-            }
+          const rawId = qIdIdx !== -1 && row[qIdIdx] ? row[qIdIdx].trim() : `q_${r}`;
+          const options = [];
 
-            const prefix = num > 0 ? "+" : "";
-            const text = `${prefix}${num.toFixed(2)}%`;
-            let textColorClass = "text-gray-300";
-            if (num > 0) textColorClass = "text-green-400";
-            if (num < 0) textColorClass = "text-red-400";
-
-            return { raw: num, text: text, class: textColorClass };
-        }
-
-        function createHeatmapCell(item, index) {
-            const cell = document.createElement('div');
-            const bgColor = getPerformanceColor(item.perf.raw);
-            
-            // Setup the container with transitions and tabindex for accessibility/mobile taps
-            cell.className = `heatmap-cell group relative w-full overflow-hidden rounded-xl cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.5)] border border-white/5 transition-transform hover:scale-[1.03] hover:z-10 focus:outline-none focus:ring-2 focus:ring-white/20`;
-            cell.style.backgroundColor = bgColor;
-            cell.style.animation = `slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 20}ms`;
-            cell.tabIndex = 0;
-
-            // Default State (Ticker)
-            const defaultState = document.createElement('div');
-            defaultState.className = `absolute inset-0 flex items-center justify-center transition-opacity duration-300 group-hover:opacity-0 group-focus:opacity-0`;
-            defaultState.innerHTML = `<span class="font-mono text-base sm:text-lg font-bold tracking-tight text-white/95 drop-shadow-md">${item.ticker}</span>`;
-
-            // Hover/Focus State (Name + Percentage)
-            const hoverState = document.createElement('div');
-            hoverState.className = `absolute inset-0 flex flex-col items-center justify-center p-2 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus:opacity-100 bg-black/60 backdrop-blur-[2px]`;
-            hoverState.innerHTML = `
-                <span class="text-[10px] sm:text-xs font-medium text-gray-100 line-clamp-2 leading-tight mb-1 drop-shadow-md">${item.name}</span>
-                <div class="flex flex-col items-center mt-1">
-                    <span class="text-[8px] sm:text-[9px] text-gray-400/90 uppercase tracking-widest leading-none mb-0.5">Daily Change</span>
-                    <span class="font-mono text-xs sm:text-sm font-bold drop-shadow-md ${item.perf.class}">${item.perf.text}</span>
-                </div>
-            `;
-
-            cell.appendChild(defaultState);
-            cell.appendChild(hoverState);
-            return cell;
-        }
-
-        async function fetchAndProcessData() {
-            try {
-                const response = await fetch(CSV_URL);
-                if (!response.ok) throw new Error("Network response was not ok");
-                const csvText = await response.text();
-                
-                Papa.parse(csvText, {
-                    skipEmptyLines: true,
-                    complete: function(results) {
-                        const data = results.data;
-                        if (!data || data.length === 0) throw new Error("Empty CSV data");
-
-                        // Extract single-cell values as requested
-                        // Intro text: H1 (Row 0, Col 7)
-                        const introText = (data[0] && data[0][7]) ? data[0][7] : "Overview of my active investment portfolio and asset allocations.";
-                        
-                        // Last Updated: F2 (Row 1, Col 5)
-                        const rawLastUpdated = (data[1] && data[1][5]) ? data[1][5] : "N/A";
-                        const lastUpdated = formatDate(rawLastUpdated);
-
-                        // Small Print Disclosure: H3 (Row 2, Col 7)
-                        const footerText = (data[2] && data[2][7]) ? data[2][7] : "";
-
-                        const directHoldings = [];
-                        const funds = [];
-
-                        // Process rows (assuming row 0 might be headers, we start processing at row 1)
-                        // If row 1 contains actual data, it gets picked up. If D/E/F are headers in row 0, we skip row 0.
-                        for (let i = 1; i < data.length; i++) {
-                            const row = data[i];
-
-                            // Direct Holdings: Col A(0) Ticker, Col B(1) Name, Col C(2) Performance
-                            if (row[0] && row[0].trim() !== "" && row[0].trim().toLowerCase() !== "ticker") {
-                                directHoldings.push({
-                                    ticker: row[0].trim(),
-                                    name: row[1] ? row[1].trim() : "Unknown",
-                                    perf: parsePerformance(row[2])
-                                });
-                            }
-
-                            // Funds: Col D(3) Ticker, Col E(4) Name, Col F(5) Performance
-                            // Note: F2 contains the date. If i=1, row[5] is the date string.
-                            // parsePerformance safely handles date strings by returning 0%.
-                            if (row[3] && row[3].trim() !== "" && row[3].trim().toLowerCase() !== "ticker") {
-                                funds.push({
-                                    ticker: row[3].trim(),
-                                    name: row[4] ? row[4].trim() : "Unknown",
-                                    perf: parsePerformance(row[5])
-                                });
-                            }
-                        }
-
-                        renderUI(introText, lastUpdated, footerText, directHoldings, funds);
-                    },
-                    error: function(err) {
-                        showError("Failed to parse the data source.");
-                        console.error(err);
-                    }
+          // Scan paired option / next columns
+          for (let c = 0; c < headerRow.length; c++) {
+            const h = headerRow[c];
+            if (h.includes('option') || h.includes('choice') || h.includes('answer')) {
+              const optText = row[c] || '';
+              if (optText) {
+                // find corresponding next
+                let nextTarget = 'END';
+                // try next column
+                if (c + 1 < headerRow.length && (headerRow[c+1].includes('next') || headerRow[c+1].includes('target'))) {
+                  nextTarget = row[c+1] ? row[c+1].trim() : 'END';
+                }
+                options.push({
+                  text: optText,
+                  emoji: '',
+                  nextId: nextTarget
                 });
-            } catch (err) {
-                showError("Failed to connect to the disclosure source.");
-                console.error(err);
+              }
             }
-        }
+          }
 
-        function renderUI(intro, dateText, footer, direct, funds) {
-            // Update Headers
-            document.getElementById('intro-text').innerText = intro;
-            
-            // Update Footer
-            document.getElementById('footer-disclosure').innerText = footer;
-            
-            // Render Grids
-            const directGrid = document.getElementById('direct-grid');
-            const fundsGrid = document.getElementById('funds-grid');
-            
-            directGrid.innerHTML = '';
-            fundsGrid.innerHTML = '';
+          // If no specific options parsed, fallback to sequential
+          if (options.length === 0 && row.length > qTextIdx + 1) {
+            for (let c = qTextIdx + 1; c < row.length; c++) {
+              if (row[c]) {
+                options.push({ text: row[c], emoji: '', nextId: r + 1 < rows.length ? `q_${r+1}` : 'END' });
+              }
+            }
+          }
 
-            direct.forEach((item, index) => {
-                directGrid.appendChild(createHeatmapCell(item, index));
+          if (options.length > 0) {
+            compiled.push({
+              id: rawId,
+              text: qText,
+              description: descIdx !== -1 && row[descIdx] ? row[descIdx] : '',
+              options: options
             });
-
-            funds.forEach((item, index) => {
-                fundsGrid.appendChild(createHeatmapCell(item, index));
-            });
-
-            // Transition UI States
-            document.getElementById('loading-state').classList.add('hidden');
-            const content = document.getElementById('content-container');
-            content.classList.remove('hidden');
-            content.classList.add('animate-fade-in');
+          }
         }
 
-        function showError(msg) {
-            document.getElementById('intro-text').innerHTML = `<span class="text-red-400 border border-red-400/20 bg-red-400/10 px-3 py-1 rounded">Error: ${msg}</span>`;
-            document.getElementById('loading-state').innerHTML = `<p class="text-gray-500 italic px-4">The heatmap data is currently unavailable. Please verify the Google Sheets URL.</p>`;
-        }
+        if (compiled.length > 0) return compiled;
+      }
 
-        // Initialize App
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchAndProcessData();
-        });
-    </script>
+      return null;
+    }
+
+    /**
+     * Fetches sheet data with direct request, followed by reliable CORS proxies
+     */
+    async function loadGoogleSheetData() {
+      updateSyncStatus('connecting', 'Connecting to sheet...');
+      const csvUrl = getCsvUrl(GOOGLE_PUB_URL);
+
+      // Attempt 1: Direct fetch
+      try {
+        const res = await fetch(csvUrl, { cache: 'no-store' });
+        if (res.ok) {
+          const text = await res.text();
+          const parsed = parseCSVText(text);
+          const structured = processSheetRows(parsed);
+          if (structured && structured.length > 0) {
+            applyLoadedQuestions(structured, 'Live Google Sheet');
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Direct sheet fetch encountered CORS/Network, attempting proxy:", err);
+      }
+
+      // Attempt 2: Allorigins proxy
+      try {
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(csvUrl)}`;
+        const res = await fetch(proxyUrl);
+        if (res.ok) {
+          const text = await res.text();
+          const parsed = parseCSVText(text);
+          const structured = processSheetRows(parsed);
+          if (structured && structured.length > 0) {
+            applyLoadedQuestions(structured, 'Google Sheet (Proxy)');
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Proxy attempt 1 error:", err);
+      }
+
+      // Attempt 3: Corsproxy fallback
+      try {
+        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(csvUrl)}`;
+        const res = await fetch(proxyUrl);
+        if (res.ok) {
+          const text = await res.text();
+          const parsed = parseCSVText(text);
+          const structured = processSheetRows(parsed);
+          if (structured && structured.length > 0) {
+            applyLoadedQuestions(structured, 'Google Sheet (Proxy 2)');
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Proxy attempt 2 error:", err);
+      }
+
+      // Fallback: Use the comprehensive default decision tree
+      console.info("Using embedded default decision tree for Bek's birthday");
+      applyLoadedQuestions(FALLBACK_QUESTIONS, 'Embedded Birthday Tree (Ready)');
+      updateSyncStatus('fallback', 'Ready (Offline / Default)');
+    }
+
+    function applyLoadedQuestions(questions, sourceDesc) {
+      questionsData = questions;
+      questionMap = {};
+
+      questionsData.forEach(q => {
+        questionMap[q.id] = q;
+        // Also map by lowercase question text so textual nextId pointers work seamlessly!
+        const normalizedTitle = q.text.toLowerCase().trim();
+        questionMap[normalizedTitle] = q;
+      });
+
+      initialQuestionId = questionsData[0].id;
+      updateSyncStatus('synced', 'Connected to Bek\'s Sheet ✨');
+      
+      // Update modal metrics
+      document.getElementById('modalQuestionCount').textContent = questionsData.length;
+      document.getElementById('modalSourceType').textContent = sourceDesc;
+      document.getElementById('modalStatusLabel').textContent = 'Successfully Loaded';
+      document.getElementById('modalStatusLabel').className = 'font-semibold text-emerald-600';
+    }
+
+    function updateSyncStatus(state, label) {
+      const dot = document.getElementById('syncStatusDot');
+      const text = document.getElementById('syncStatusText');
+      text.textContent = label;
+
+      if (state === 'connecting') {
+        dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+      } else if (state === 'synced') {
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+      } else {
+        dot.className = 'w-2 h-2 rounded-full bg-blush-400';
+      }
+    }
+
+    /* =========================================================
+       5. USER FLOW & NAVIGATION LOGIC
+       ========================================================= */
+
+    function showScreen(screenId) {
+      const screens = ['welcomeScreen', 'questionScreen', 'summaryScreen'];
+      screens.forEach(id => {
+        const el = document.getElementById(id);
+        if (id === screenId) {
+          el.classList.remove('hidden');
+          el.classList.add('animate-fadeInUp');
+        } else {
+          el.classList.add('hidden');
+          el.classList.remove('animate-fadeInUp');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function startQuestionnaire() {
+      playChime('click');
+      userSelections = [];
+      currentQuestionId = initialQuestionId;
+      renderCurrentQuestion();
+      showScreen('questionScreen');
+    }
+
+    function renderCurrentQuestion() {
+      const q = questionMap[currentQuestionId] || questionsData.find(item => item.id == currentQuestionId);
+
+      // If question does not exist or reached END, show summary
+      if (!q || isEndPointer(currentQuestionId)) {
+        finishItinerary();
+        return;
+      }
+
+      // Step & Progress counter
+      const currentStep = userSelections.length + 1;
+      document.getElementById('questionStepLabel').textContent = `Choice #${currentStep}`;
+      
+      // Back button visibility
+      const backBtn = document.getElementById('backButton');
+      if (userSelections.length > 0) {
+        backBtn.classList.remove('invisible');
+      } else {
+        backBtn.classList.add('invisible');
+      }
+
+      // Question details
+      document.getElementById('questionText').textContent = q.text;
+      const descEl = document.getElementById('questionDescription');
+      if (q.description) {
+        descEl.textContent = q.description;
+        descEl.classList.remove('hidden');
+      } else {
+        descEl.classList.add('hidden');
+      }
+
+      // Render options list
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+
+      // Colour gradients for options to give a joyful colourful feel
+      const optionColors = [
+        { border: 'hover:border-blush-300', bg: 'hover:bg-blush-50/40', badge: 'bg-blush-100 text-blush-700' },
+        { border: 'hover:border-honey-300', bg: 'hover:bg-honey-50/40', badge: 'bg-honey-100 text-honey-700' },
+        { border: 'hover:border-lavender-300', bg: 'hover:bg-lavender-50/40', badge: 'bg-lavender-100 text-lavender-700' },
+        { border: 'hover:border-mint-300', bg: 'hover:bg-mint-50/40', badge: 'bg-mint-100 text-mint-700' },
+      ];
+
+      q.options.forEach((opt, idx) => {
+        const theme = optionColors[idx % optionColors.length];
+        const btn = document.createElement('button');
+        btn.className = `choice-card w-full text-left p-4 sm:p-5 rounded-2xl bg-white/90 border border-gray-200/80 ${theme.border} ${theme.bg} flex items-center justify-between group shadow-sm`;
+        
+        // Auto emoji fallback if empty
+        const emoji = opt.emoji || pickEmojiForChoice(opt.text, idx);
+
+        btn.innerHTML = `
+          <div class="flex items-center gap-3.5 sm:gap-4 flex-1 pr-2">
+            <span class="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0 ${theme.badge} shadow-xs transition-transform group-hover:scale-110">
+              ${emoji}
+            </span>
+            <div>
+              <span class="font-display font-semibold text-base sm:text-lg text-gray-800 group-hover:text-gray-900 block leading-snug">
+                ${escapeHTML(opt.text)}
+              </span>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-gray-100 group-hover:bg-blush-500 group-hover:text-white text-gray-400 flex items-center justify-center shrink-0 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        `;
+
+        btn.onclick = () => selectOption(q, opt, emoji);
+        container.appendChild(btn);
+      });
+
+      // Update progress indicators
+      updateProgressIndicators();
+    }
+
+    function isEndPointer(id) {
+      if (!id) return true;
+      const str = String(id).toUpperCase().trim();
+      return str === 'END' || str === 'FINISH' || str === 'DONE' || str === 'SUMMARY' || str === '-1';
+    }
+
+    function selectOption(currentQuestion, option, emoji) {
+      playChime('click');
+
+      // Record choice into itinerary memory
+      userSelections.push({
+        questionId: currentQuestion.id,
+        questionText: currentQuestion.text,
+        answerText: option.text,
+        emoji: emoji,
+        nextId: option.nextId
+      });
+
+      // Determine the next node
+      const nextTarget = option.nextId ? String(option.nextId).trim() : 'END';
+
+      if (isEndPointer(nextTarget)) {
+        finishItinerary();
+        return;
+      }
+
+      // Check if nextId exists by key
+      if (questionMap[nextTarget]) {
+        currentQuestionId = questionMap[nextTarget].id;
+        renderCurrentQuestion();
+        return;
+      }
+
+      // Check if nextId matches lowercase text of another question
+      const targetLower = nextTarget.toLowerCase();
+      if (questionMap[targetLower]) {
+        currentQuestionId = questionMap[targetLower].id;
+        renderCurrentQuestion();
+        return;
+      }
+
+      // If nextId doesn't match an existing question, treat as conclusion
+      finishItinerary();
+    }
+
+    function goBack() {
+      if (userSelections.length === 0) return;
+      playChime('back');
+      // Pop the last choice
+      const last = userSelections.pop();
+      currentQuestionId = last.questionId;
+      renderCurrentQuestion();
+    }
+
+    function updateProgressIndicators() {
+      const container = document.getElementById('progressDots');
+      container.innerHTML = '';
+      const totalSteps = Math.max(5, userSelections.length + 2);
+      
+      for (let i = 0; i < totalSteps; i++) {
+        const dot = document.createElement('div');
+        if (i < userSelections.length) {
+          dot.className = 'w-2 h-2 rounded-full bg-blush-500';
+        } else if (i === userSelections.length) {
+          dot.className = 'w-4 h-2 rounded-full bg-blush-400 transition-all';
+        } else {
+          dot.className = 'w-2 h-2 rounded-full bg-gray-200';
+        }
+        container.appendChild(dot);
+      }
+    }
+
+    /* =========================================================
+       6. ITINERARY SUMMARY & CONFETTI CELEBRATION
+       ========================================================= */
+
+    function finishItinerary() {
+      playChime('finish');
+      showScreen('summaryScreen');
+
+      // Trigger Confetti shower
+      fireConfetti();
+
+      // Render timeline
+      const container = document.getElementById('itineraryList');
+      container.innerHTML = '';
+
+      if (userSelections.length === 0) {
+        container.innerHTML = `<p class="text-center text-gray-400 py-6 text-sm">No items selected yet.</p>`;
+        return;
+      }
+
+      userSelections.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = "flex items-start gap-4 p-4 sm:p-5 rounded-2xl bg-white border border-gray-100 shadow-sm relative overflow-hidden group hover:border-blush-200 transition";
+
+        card.innerHTML = `
+          <!-- Number indicator -->
+          <div class="flex flex-col items-center shrink-0">
+            <span class="w-8 h-8 rounded-full bg-blush-50 border border-blush-200 text-blush-600 font-display font-bold text-xs flex items-center justify-center">
+              ${index + 1}
+            </span>
+            ${index < userSelections.length - 1 ? '<div class="w-0.5 h-10 bg-gray-100 mt-2"></div>' : ''}
+          </div>
+
+          <!-- Choice details -->
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">${escapeHTML(item.questionText)}</p>
+            <div class="flex items-center gap-2">
+              <span class="text-xl shrink-0">${item.emoji || '✨'}</span>
+              <h4 class="font-display font-bold text-base sm:text-lg text-gray-900 leading-snug">
+                ${escapeHTML(item.answerText)}
+              </h4>
+            </div>
+          </div>
+          
+          <div class="text-emerald-500 self-center">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function fireConfetti() {
+      if (typeof confetti !== 'function') return;
+
+      const count = 200;
+      const defaults = {
+        origin: { y: 0.7 },
+        colors: ['#f43f5e', '#fbbf24', '#8b5cf6', '#10b981', '#ec4899']
+      };
+
+      function fire(particleRatio, opts) {
+        confetti(Object.assign({}, defaults, opts, {
+          particleCount: Math.floor(count * particleRatio)
+        }));
+      }
+
+      fire(0.25, { spread: 26, startVelocity: 55 });
+      fire(0.2, { spread: 60 });
+      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+      fire(0.1, { spread: 120, startVelocity: 45 });
+    }
+
+    function restartQuestionnaire() {
+      playChime('click');
+      startQuestionnaire();
+    }
+
+    /* =========================================================
+       7. CLIPBOARD EXPORT & MODAL UTILITIES
+       ========================================================= */
+
+    function copyItinerary() {
+      if (userSelections.length === 0) return;
+
+      let text = "✨ Bek's Official Birthday Itinerary ✨\n\n";
+      userSelections.forEach((item, i) => {
+        text += `${i + 1}. ${item.questionText}\n   → ${item.emoji} ${item.answerText}\n\n`;
+      });
+      text += "Let's make it the best birthday ever! 🥂🎉";
+
+      // Fallback copy implementation compatible with all iframes and GitHub Pages
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showToast('Itinerary copied to clipboard! 📋');
+          const btnText = document.getElementById('copyBtnText');
+          btnText.textContent = "Copied!";
+          setTimeout(() => { btnText.textContent = "Copy Itinerary"; }, 2000);
+        } else {
+          showToast('Failed to copy');
+        }
+      } catch (err) {
+        showToast('Clipboard copy error');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toastMessage');
+      text.textContent = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    function openDataModal() {
+      document.getElementById('dataModal').classList.remove('hidden');
+    }
+
+    function closeDataModal() {
+      document.getElementById('dataModal').classList.add('hidden');
+    }
+
+    function refreshDataFromSheet() {
+      const newUrl = document.getElementById('sheetUrlInput').value.trim();
+      closeDataModal();
+      showToast('Re-syncing with Google Sheets...');
+      loadGoogleSheetData();
+    }
+
+    function pickEmojiForChoice(text, index) {
+      const lower = text.toLowerCase();
+      if (lower.includes('coffee') || lower.includes('latte')) return '☕';
+      if (lower.includes('sleep') || lower.includes('bed')) return '🛏️';
+      if (lower.includes('walk') || lower.includes('stroll')) return '🌿';
+      if (lower.includes('pancake') || lower.includes('breakfast')) return '🥞';
+      if (lower.includes('spa') || lower.includes('massage')) return '🧖‍♀️';
+      if (lower.includes('shop') || lower.includes('boutique')) return '🛍️';
+      if (lower.includes('dinner') || lower.includes('pasta') || lower.includes('italian')) return '🍝';
+      if (lower.includes('sushi') || lower.includes('japanese')) return '🍣';
+      if (lower.includes('wine') || lower.includes('cocktail') || lower.includes('champagne')) return '🥂';
+      if (lower.includes('movie') || lower.includes('cuddle')) return '🍿';
+      if (lower.includes('ice cream') || lower.includes('gelato')) return '🍨';
+      
+      const defaultEmojis = ['✨', '🌸', '💖', '🍰', '🥂', '🎉'];
+      return defaultEmojis[index % defaultEmojis.length];
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /* =========================================================
+       8. INITIALIZATION
+       ========================================================= */
+    window.addEventListener('DOMContentLoaded', () => {
+      // Start loading data from Google Sheet
+      loadGoogleSheetData();
+    });
+  </script>
 </body>
 </html>
